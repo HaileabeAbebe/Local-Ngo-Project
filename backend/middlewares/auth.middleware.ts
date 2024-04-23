@@ -60,7 +60,8 @@ export const isAdminOrEditor = (
   next: NextFunction
 ) => {
   if (req.role !== "admin" && req.role !== "editor") {
-    return next(createError(403, "User is not authorized"));
+    // return next(createError(403, "User is not authorized"));
+    return res.status(403).json({ message: "User is not authorized" });
   }
   next();
 };

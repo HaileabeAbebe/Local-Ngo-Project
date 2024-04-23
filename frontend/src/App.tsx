@@ -1,105 +1,127 @@
 import { FC } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Projects from "./pages/Projects/ProjectList";
-import Blog from "./pages/Blog";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Layout from "./layouts/Layout";
 import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import ProjectDetail from "./pages/Projects/ProjectDetail";
-import AddProject from "./pages/Projects/AddProject";
-import EditProject from "./pages/Projects/EditProject";
+import ProjectDetail from "./pages/projects/ProjectDetail";
+import AddProject from "./pages/projects/AddProject";
+import EditProject from "./pages/projects/EditProject";
+import { useAppContext } from "./contexts/AppContext";
+import Blogs from "./pages/blogs/Blogs";
+import AddBlog from "./pages/blogs/AddBlog";
+import Projects from "./pages/projects/ProjectList";
+import BlogDetail from "./pages/blogs/BlogDetail";
 
 const App: FC = () => {
+  const { isLoggedIn } = useAppContext();
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Home />
-            </Layout>
-          }
-        />
-        <Route
-          path="/sign-up"
-          element={
-            <Layout>
-              <SignUp />
-            </Layout>
-          }
-        />
-        <Route
-          path="/sign-in"
-          element={
-            <Layout>
-              <SignIn />
-            </Layout>
-          }
-        />
-        <Route
-          path="/projects"
-          element={
-            <Layout>
-              <Projects />
-            </Layout>
-          }
-        />
-        <Route
-          path="/project/:projectId"
-          element={
-            <Layout>
-              <ProjectDetail />
-            </Layout>
-          }
-        />
-        <Route
-          path="/add-project"
-          element={
-            <Layout>
-              <AddProject />
-            </Layout>
-          }
-        />
-        <Route
-          path="/edit-project"
-          element={
-            <Layout>
-              <EditProject />
-            </Layout>
-          }
-        />
-        <Route
-          path="/blog"
-          element={
-            <Layout>
-              <Blog />
-            </Layout>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Layout>
-              <About />
-            </Layout>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <Layout>
-              <Contact />
-            </Layout>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Layout>
+            <Home />
+          </Layout>
+        }
+      />
+      <Route
+        path="/sign-up"
+        element={
+          <Layout>
+            <SignUp />
+          </Layout>
+        }
+      />
+      <Route
+        path="/sign-in"
+        element={
+          <Layout>
+            <SignIn />
+          </Layout>
+        }
+      />
+      <Route
+        path="/projects"
+        element={
+          <Layout>
+            <Projects />
+          </Layout>
+        }
+      />
+      <Route
+        path="/project/:projectId"
+        element={
+          <Layout>
+            <ProjectDetail />
+          </Layout>
+        }
+      />
+      {isLoggedIn && (
+        <>
+          <Route
+            path="/add-project"
+            element={
+              <Layout>
+                <AddProject />
+              </Layout>
+            }
+          />
+          <Route
+            path="/edit-project/:projectId"
+            element={
+              <Layout>
+                <EditProject />
+              </Layout>
+            }
+          />
+        </>
+      )}
+      <Route
+        path="/blogs"
+        element={
+          <Layout>
+            <Blogs />
+          </Layout>
+        }
+      />
+      <Route
+        path="/blogs/:blogId"
+        element={
+          <Layout>
+            <BlogDetail />
+          </Layout>
+        }
+      />
+      <Route
+        path="/add-blog"
+        element={
+          <Layout>
+            <AddBlog />
+          </Layout>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <Layout>
+            <About />
+          </Layout>
+        }
+      />
+      <Route
+        path="/contact"
+        element={
+          <Layout>
+            <Contact />
+          </Layout>
+        }
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 

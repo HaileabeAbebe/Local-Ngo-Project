@@ -1,3 +1,4 @@
+// blog.model.ts
 import mongoose from "mongoose";
 
 interface IBlog extends mongoose.Document {
@@ -5,7 +6,8 @@ interface IBlog extends mongoose.Document {
   content: string;
   date: Date;
   author: mongoose.Schema.Types.ObjectId; // Reference to User model
-  imageURL: string;
+  imageUrls: string[];
+  lastUpdated: Date;
 }
 
 const blogSchema = new mongoose.Schema<IBlog>({
@@ -13,7 +15,8 @@ const blogSchema = new mongoose.Schema<IBlog>({
   content: { type: String, required: true },
   date: { type: Date, default: Date.now },
   author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  imageURL: { type: String },
+  imageUrls: { type: [String] },
+  lastUpdated: { type: Date, default: Date.now },
 });
 
 export default mongoose.model<IBlog>("Blog", blogSchema);

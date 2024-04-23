@@ -1,10 +1,11 @@
 import { FaTree, FaRegHandshake, FaRegLightbulb } from "react-icons/fa"; // Importing some icons from react-icons
+import { Link } from "react-router-dom";
 
 const ProjectsSection = () => {
   return (
-    <section className="bg-white text-gray-800 py-12">
+    <section className="bg-white text-gray-800 py-20">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold mb-8 text-center text-green-800">
+        <h2 className="text-4xl font-bold mb-8 text-center text-green-800">
           Our Impactful Projects
         </h2>
         <p className="mb-8 text-lg text-center">
@@ -41,12 +42,14 @@ const ProjectsSection = () => {
         </div>
 
         <div className="mt-8 flex justify-center">
-          <button className="bg-green-800 text-white px-6 py-3 mr-4 rounded-lg">
-            Explore
-          </button>
-          <button className="bg-orange-500 text-white px-6 py-3 rounded-lg">
+          {/* <button className="bg-green-800 text-white px-6 py-3 mr-4 rounded-lg">
             Donate
-          </button>
+          </button> */}
+          <Link to="/projects">
+            <button className="bg-orange-500 text-white px-8 py-3 rounded-lg">
+              Explore
+            </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -2,16 +2,26 @@ import { useMutation } from "react-query";
 import ManageProjectForm from "../../forms/ManageProjectForm/ManageProjectForm";
 import * as apiCall from "../../services/apiCall";
 import { useAppContext } from "../../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const AddProject = () => {
   const { showToast } = useAppContext();
+  const navigate = useNavigate();
 
   const { mutate, isLoading } = useMutation(apiCall.addProject, {
     onSuccess: () => {
       showToast({ message: "Project created successfully!", type: "SUCCESS" });
+      navigate("/projects");
     },
-    onError: (error: Error) => {
-      showToast({ message: error.message, type: "ERROR" });
+    onError: async (error) => {
+      // If the error is an instance of Response, it's coming from a fetch call
+      if (error instanceof Response) {
+        const err = await error.json();
+        showToast({ message: err.message, type: "ERROR" });
+      } else {
+        // Otherwise, it's a JavaScript error
+        showToast({ message: error.message, type: "ERROR" });
+      }
     },
   });
 

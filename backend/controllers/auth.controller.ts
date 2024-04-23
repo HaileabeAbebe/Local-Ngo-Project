@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
 
-export const login = async (
+export const signIn = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -70,8 +70,8 @@ export const validateToken = (
   }
 };
 
-// logout
-export const logout = async (req: Request, res: Response) => {
+// Sign-Out
+export const signOut = async (req: Request, res: Response) => {
   res
     .clearCookie("auth_token", {
       sameSite: "none",

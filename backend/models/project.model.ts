@@ -7,6 +7,7 @@ interface IProject extends mongoose.Document {
   startDate: Date;
   endDate: Date;
   imageUrls: string[];
+  docUrls: string[];
   createdBy: mongoose.Schema.Types.ObjectId;
   isApproved: boolean;
   lastUpdated: Date;
@@ -17,13 +18,17 @@ const projectSchema = new mongoose.Schema<IProject>({
   description: { type: String, required: true },
   status: { type: String, enum: ["ongoing", "finished"], required: true },
   startDate: { type: Date, default: Date.now },
-  endDate: { type: Date },
+  endDate: { type: Date, default: Date.now },
   imageUrls: {
     type: [String],
     validate: [
-      arrayLimit,
+      imageArrayLimit,
       "{PATH} exceeds the limit of 6 images or does not meet the minimum of 1 image",
     ],
+  },
+  docUrls: {
+    type: [String],
+    // validate: [docArrayLimit, "{PATH} exceeds the limit of 3 documents"],
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
@@ -34,8 +39,12 @@ const projectSchema = new mongoose.Schema<IProject>({
   lastUpdated: { type: Date, required: true },
 });
 
-function arrayLimit(val: string[]) {
+function imageArrayLimit(val: string[]) {
   return val.length >= 1 && val.length <= 6;
 }
+
+// function docArrayLimit(val: string[]) {
+//   return val.length <= 3;
+// }
 
 export default mongoose.model<IProject>("Project", projectSchema);

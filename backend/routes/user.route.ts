@@ -4,7 +4,8 @@ import { validateRegistration } from "./../validators/user.validator";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 const router = Router();
 
-router.post("/register", validateRegistration, userController.register);
+router.post("/sign-up", validateRegistration, userController.signUp);
+router.get("/", userController.fetchUsers);
 router.get("/me", isAuthenticated, userController.profile);
 
 router.put("/me", isAuthenticated, userController.updateProfile);

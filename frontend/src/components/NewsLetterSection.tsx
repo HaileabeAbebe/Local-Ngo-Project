@@ -1,5 +1,5 @@
 import { FC } from "react";
-import newsBackground from "../assets/images/leaf.jpg";
+import newsBackground from "../assets/images/jungle2.jpg";
 
 const NewsLetterSection: FC = () => {
   return (

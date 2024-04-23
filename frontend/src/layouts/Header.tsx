@@ -23,18 +23,3 @@ const Header: FC = () => {
 };
 
 export default Header;
-
-// import { FC } from "react";
-// import Navigation from "../components/molecules/Navigation";
-
-// const Header: FC = () => {
-//   return (
-//     <header className="bg-white text-white h-20 p-4">
-//       <div className="container mx-auto">
-//         <Navigation />
-//       </div>
-//     </header>
-//   );
-// };
-
-// export default Header;

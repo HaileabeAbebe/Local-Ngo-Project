@@ -8,6 +8,7 @@ import userRoutes from "./routes/user.route";
 import authRoutes from "./routes/auth.route";
 import adminRoutes from "./routes/admin.route";
 import projectRoutes from "./routes/project.route";
+import blogRoutes from "./routes/blog.route";
 import { CustomError } from "./utils/createError";
 
 // Create an instance of the Express server
@@ -27,7 +28,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      const allowedOrigins = process.env.FRONTEND_URL
+        ? process.env.FRONTEND_URL.split(",")
+        : [];
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -36,6 +46,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/blogs", blogRoutes);
 
 // handling error
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {

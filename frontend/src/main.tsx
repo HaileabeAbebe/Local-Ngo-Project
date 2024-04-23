@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
+import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AppContextProvider } from "./contexts/AppContext.tsx";
 // import { SearchContextProvider } from "./contexts/SearchContext.tsx";
+import App from "./App.tsx";
+import "./index.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,12 +16,14 @@ const queryClient = new QueryClient({
 });
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AppContextProvider>
-        {/* <SearchContextProvider> */}
-        <App />
-        {/* </SearchContextProvider> */}
-      </AppContextProvider>
-    </QueryClientProvider>
+    <Router>
+      <QueryClientProvider client={queryClient}>
+        <AppContextProvider>
+          {/* <SearchContextProvider> */}
+          <App />
+          {/* </SearchContextProvider> */}
+        </AppContextProvider>
+      </QueryClientProvider>
+    </Router>
   </React.StrictMode>
 );

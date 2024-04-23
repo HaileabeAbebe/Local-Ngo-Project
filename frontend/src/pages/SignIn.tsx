@@ -10,7 +10,7 @@ export type SignInFormData = {
 };
 
 const SignIn = () => {
-  const { showToast } = useAppContext();
+  const { showToast, setLoginStatus } = useAppContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -22,8 +22,9 @@ const SignIn = () => {
 
   const mutation = useMutation(apiCall.signIn, {
     onSuccess: async () => {
-      showToast({ message: "LoggedIn Successfully!", type: "SUCCESS" });
+      showToast({ message: "Logged in Successfully!", type: "SUCCESS" });
       await queryClient.invalidateQueries("validateToken");
+      setLoginStatus(true);
       navigate("/");
     },
     onError: (error: Error) => {
@@ -37,14 +38,16 @@ const SignIn = () => {
 
   return (
     <form
-      className="container py-10 mx-auto w-1/2 flex flex-col gap-5"
+      className="container mx-auto w-1/2 flex flex-col gap-5 p-10 rounded-lg shadow-lg bg-white"
       onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold">Sign In</h2>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <h2 className="text-3xl font-bold mb-5 text-center text-green-800">
+        Sign In
+      </h2>
+      <label className="text-gray-700 text-sm font-bold mb-2">
         Email
         <input
           type="email"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           placeholder="bob@gmail.com"
           {...register("email", {
             required: "This field is required",
@@ -53,12 +56,12 @@ const SignIn = () => {
           <span className="text-red-500">{errors.email.message}</span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-sm font-bold mb-2">
         Password
         <input
           type="password"
           placeholder="myPassword"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           {...register("password", {
             required: "This field is required!",
           })}></input>
@@ -66,19 +69,28 @@ const SignIn = () => {
           <span className="text-red-500">{errors.password.message}</span>
         )}
       </label>
-      <span className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-6">
         <span className="text-sm">
           Not Registered?{" "}
-          <Link to="/sign-up" className="underline">
+          <Link to="/sign-up" className="underline text-orange-500">
             Create an account
           </Link>
         </span>
         <button
           type="submit"
-          className="bg-green-800 text-white py-2 px-4 font-bold hover:bg-green-400 rounded">
+          className="bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           Login
         </button>
-      </span>
+      </div>
+      <div className="mt-6">
+        <button
+          className="bg-gray-200 text-blue-800 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+          onClick={() => {
+            /* Add your Google Sign-In logic here */
+          }}>
+          Sign in with Google
+        </button>
+      </div>
     </form>
   );
 };

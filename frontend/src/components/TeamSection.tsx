@@ -1,5 +1,7 @@
 import defaultProfileImage from "../assets/images/defaultProfileImage.jpg";
-
+import jane from "../assets/images/jane.jpg";
+import man from "../assets/images/man.jpg";
+import girl2 from "../assets/images/girl2.avif";
 const TeamSection = () => {
   return (
     <section className="bg-white text-gray-800 py-12">
@@ -14,7 +16,7 @@ const TeamSection = () => {
         <div className="grid grid-cols-3 gap-8">
           <div className="border border-gray-200 rounded-lg p-8 h-full">
             <img
-              src={defaultProfileImage}
+              src={jane}
               alt="John Doe"
               className="w-20 h-20 rounded-full mx-auto mb-5"
             />
@@ -29,9 +31,9 @@ const TeamSection = () => {
           </div>
           <div className="border border-gray-200 rounded-lg p-8 h-full">
             <img
-              src={defaultProfileImage}
+              src={man}
               alt="Jane Doe"
-              className="w-20 h-20 rounded-full mx-auto mb-5"
+              className="w-20 h-20 rounded-full mx-auto mb-5 object-scale-down"
             />
             <h3 className="text-2xl font-bold mb-2 text-center text-green-800">
               Jane Doe
@@ -46,7 +48,7 @@ const TeamSection = () => {
           </div>
           <div className="border border-gray-200 rounded-lg p-8 h-full">
             <img
-              src={defaultProfileImage}
+              src={girl2}
               alt="Michael Johnson"
               className="w-20 h-20 rounded-full mx-auto mb-5"
             />

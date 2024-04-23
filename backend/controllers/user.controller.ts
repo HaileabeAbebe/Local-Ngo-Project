@@ -5,7 +5,7 @@ import { body, validationResult } from "express-validator";
 import User, { IUser } from "../models/user.model";
 import createError from "../utils/createError";
 
-export const register = async (
+export const signUp = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -50,6 +50,21 @@ export const profile = async (
 
   if (!user) {
     return next(createError(404, "User not found"));
+  }
+
+  res.json(user);
+};
+
+// Users
+export const fetchUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = await User.find();
+
+  if (!user) {
+    return next(createError(404, "Users not found"));
   }
 
   res.json(user);

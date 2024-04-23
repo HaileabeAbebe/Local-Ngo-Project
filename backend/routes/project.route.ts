@@ -1,3 +1,4 @@
+// Import necessary modules
 import { Router } from "express";
 import multer from "multer";
 import * as projectController from "../controllers/project.controller";
@@ -13,31 +14,65 @@ import {
   isAdminOrEditor,
 } from "../middlewares/auth.middleware";
 
+// Create a new router
 const router = Router();
-// Setting up multer for file uploads with memory storage and a file size limit of 5MB.
+
+// Set up multer for file uploads with memory storage and a file size limit of 10MB.
+// The fileFilter function is used to control which files should be uploaded and which should be skipped.
+// It accepts PDF, DOC, DOCX, TXT, RTF, and ODT files for documents, and all image types for images.
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: 10 * 1024 * 1024, // Limit file size to 10MB
+  },
+  fileFilter: function (req, file, cb) {
+    // Accept .pdf, .doc, .docx, .txt, .rtf, .odt files for documents
+    // and all image types for images
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype === "application/pdf" ||
+      file.mimetype === "application/msword" ||
+      file.mimetype ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      file.mimetype === "text/plain" ||
+      file.mimetype === "application/rtf" ||
+      file.mimetype === "application/vnd.oasis.opendocument.text"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
   },
 });
 
+// Define the routes
+router.get("/", projectController.fetchProjects);
+router.get("/:projectId", projectController.fetchProject);
+
+// The POST route uses the upload.fields function to handle multiple types of files.
+// The 'imageFiles' field is used for image uploads and the 'docFiles' field is used for document uploads.
 router.post(
   "/",
   isAuthenticated,
   isAdminOrEditor,
-  upload.array("imageFiles", 6),
+  upload.fields([
+    { name: "imageFiles", maxCount: 6 },
+    { name: "docFiles", maxCount: 3 },
+  ]),
   validateProjectCreation,
   projectController.createProject
 );
 
-router.get("/", projectController.fetchProjects);
-router.get("/:projectId", projectController.fetchProject);
+// The PUT route also uses the upload.fields function to handle multiple types of files.
 router.put(
   "/:projectId",
   isAuthenticated,
   isAdminOrOwner(Project),
+  upload.fields([
+    { name: "imageFiles", maxCount: 6 },
+    { name: "docFiles", maxCount: 3 },
+  ]),
   validateProjectUpdate,
   projectController.updateProject
 );
@@ -49,4 +84,59 @@ router.delete(
   projectController.deleteProject
 );
 
+// Export the router
 export default router;
+
+// import { Router } from "express";
+// import multer from "multer";
+// import * as projectController from "../controllers/project.controller";
+// import Project from "../models/project.model";
+// import {
+//   validateProjectCreation,
+//   validateProjectUpdate,
+// } from "../validators/project.validator";
+// import {
+//   isAuthenticated,
+//   isAdmin,
+//   isAdminOrOwner,
+//   isAdminOrEditor,
+// } from "../middlewares/auth.middleware";
+
+// const router = Router();
+// // Setting up multer for file uploads with memory storage and a file size limit of 7MB.
+// const storage = multer.memoryStorage();
+// const upload = multer({
+//   storage: storage,
+//   limits: {
+//     fileSize: 8 * 1024 * 1024,
+//   },
+// });
+
+// router.get("/", projectController.fetchProjects);
+// router.get("/:projectId", projectController.fetchProject);
+// router.post(
+//   "/",
+//   isAuthenticated,
+//   isAdminOrEditor,
+//   upload.array("imageFiles", 6),
+//   validateProjectCreation,
+//   projectController.createProject
+// );
+
+// router.put(
+//   "/:projectId",
+//   isAuthenticated,
+//   isAdminOrOwner(Project),
+//   upload.array("imageFiles", 6),
+//   validateProjectUpdate,
+//   projectController.updateProject
+// );
+
+// router.delete(
+//   "/:projectId",
+//   isAuthenticated,
+//   isAdminOrOwner(Project),
+//   projectController.deleteProject
+// );
+
+// export default router;

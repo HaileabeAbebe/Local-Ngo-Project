@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { validateLogin } from "../validators/auth.validator";
 
-import { login, logout, validateToken } from "../controllers/auth.controller";
+import { signIn, signOut, validateToken } from "../controllers/auth.controller";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 const router = Router();
 
-router.post("/login", validateLogin, login);
+router.post("/sign-in", validateLogin, signIn);
 router.get("/validate-token", isAuthenticated, validateToken);
-router.post("/logout", logout);
+router.post("/sign-out", signOut);
 
 export default router;

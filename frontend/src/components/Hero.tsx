@@ -21,13 +21,13 @@ const HeroSection: FC = () => {
           </p>
           <div className="mt-8 space-x-4">
             <Link
-              to="/learn-more"
+              to="/projects"
               className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-800 hover:bg-green-900 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 md:py-3 md:text-lg md:px-8">
               Learn More
             </Link>
             <Link
               to="/sign-up"
-              className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-orange-600 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 md:py-3 md:text-lg md:px-8">
+              className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-orange-600 hover:text-white transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 md:py-3 md:text-lg md:px-8">
               Sign Up
             </Link>
           </div>

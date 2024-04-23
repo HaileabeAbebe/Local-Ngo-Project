@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import cloudinary from "cloudinary";
 import Project from "../models/project.model";
+import { IProject } from "../utils/types";
 
+// Fetch All Projects
 export const fetchProjects = async (
   req: Request,
   res: Response,
@@ -16,6 +18,7 @@ export const fetchProjects = async (
   }
 };
 
+// Fetch Single Project By id
 export const fetchProject = async (
   req: Request,
   res: Response,
@@ -32,6 +35,7 @@ export const fetchProject = async (
   }
 };
 
+// Create New Project
 export const createProject = async (
   req: Request,
   res: Response,
@@ -47,16 +51,17 @@ export const createProject = async (
     // Check if a project with the same title already exists for the same user
     const existingProject = await Project.findOne({
       title: req.body.title,
-      createdBy: req.userId,
     });
     if (existingProject) {
       return res.status(400).json({
-        message: "You have already created a project with this title",
+        message: "A project with this title already exists",
       });
     }
 
-    // Extracting the uploaded files and the new hotel data from the request.
-    const imageFiles = req.files as Express.Multer.File[];
+    // Extracting the uploaded files and the new project data from t  he request.
+    const imageFiles = (req.files as any)["imageFiles"];
+    const docFiles = (req.files as any)["docFiles"];
+
     const project = new Project({
       ...req.body,
       createdBy: req.userId,
@@ -64,8 +69,10 @@ export const createProject = async (
 
     // Uploading each image to Cloudinary and getting the URLs.
     const imageUrls = await uploadImages(imageFiles);
+    const docUrls = await uploadDocs(docFiles);
+    project.docUrls = docUrls;
 
-    // Adding the image URLs, the last updated date, and the user ID to the new hotel data.
+    // Adding the image URLs, the last updated date, and the user ID to the new project data.
     project.imageUrls = imageUrls;
     project.lastUpdated = new Date();
 
@@ -76,6 +83,7 @@ export const createProject = async (
   }
 };
 
+// Update project
 export const updateProject = async (
   req: Request,
   res: Response,
@@ -86,17 +94,34 @@ export const updateProject = async (
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const project = await Project.findByIdAndUpdate(
-      req.params.projectId,
-      req.body,
-      {
-        new: true,
-      }
-    );
+
+    const updatedProject: IProject = req.body;
+    updatedProject.lastUpdated = new Date();
+
+    const imageFiles = (req.files as any)?.["imageFiles"];
+    const docFiles = (req.files as any)?.["docFiles"];
+    let updatedImageUrls: string[] = [];
+    let updatedDocUrls: string[] = [];
+
+    if (imageFiles) {
+      updatedImageUrls = await uploadImages(imageFiles);
+    }
+    if (docFiles) {
+      updatedDocUrls = await uploadDocs(docFiles);
+    }
+
+    const project = await Project.findById(req.params.projectId);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-    res.json(project);
+
+    project.imageUrls = [...updatedImageUrls, ...(project.imageUrls || [])];
+    project.docUrls = [...updatedDocUrls, ...(project.docUrls || [])];
+
+    Object.assign(project, updatedProject);
+
+    await project.save();
+    res.status(200).json(project);
   } catch (error) {
     next(error);
   }
@@ -108,10 +133,11 @@ export const deleteProject = async (
   next: NextFunction
 ) => {
   try {
-    const project = await Project.findByIdAndDelete(req.params.projectId);
+    const project = await Project.findById(req.params.projectId);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
+    await Project.findByIdAndDelete(req.params.projectId);
     res.json({ message: "Project deleted" });
   } catch (error) {
     next(error);
@@ -137,4 +163,19 @@ async function uploadImages(imageFiles: Express.Multer.File[]) {
   // Waiting for all the images to be uploaded.
   const imageUrls = await Promise.all(uploadPromises);
   return imageUrls;
+}
+
+async function uploadDocs(docFiles: Express.Multer.File[]) {
+  const uploadPromises = docFiles.map(async (doc) => {
+    const b64 = Buffer.from(doc.buffer).toString("base64");
+
+    let dataURI = "data:" + doc.mimetype + ";base64," + b64;
+
+    const res = await cloudinary.v2.uploader.upload(dataURI);
+
+    return res.url;
+  });
+
+  const docUrls = await Promise.all(uploadPromises);
+  return docUrls;
 }

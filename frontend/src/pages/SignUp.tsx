@@ -12,7 +12,7 @@ export type RegisterFormData = {
 };
 
 const SignUp = () => {
-  const { showToast } = useAppContext();
+  const { showToast, setLoginStatus } = useAppContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -27,6 +27,7 @@ const SignUp = () => {
     onSuccess: async () => {
       showToast({ message: "Registration Success!", type: "SUCCESS" });
       await queryClient.invalidateQueries("validateToken");
+      setLoginStatus(true);
       navigate("/");
     },
     onError: (error: Error) => {
@@ -40,37 +41,41 @@ const SignUp = () => {
 
   return (
     <form
-      className="container py-10 mx-auto w-1/2 flex flex-col gap-5"
+      className="container mx-auto max-w-md p-10 bg-white rounded-lg shadow-md flex flex-col gap-6"
       onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold mb-5">Create an Account</h2>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <h2 className="text-4xl font-bold text-center text-green-800 mb-8">
+        Create an Account
+      </h2>
+      <label className="text-gray-700 text-sm font-bold">
         Username
         <input
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           {...register("username", {
             required: "This field is required",
           })}></input>
         {errors.username && (
-          <span className="text-red-500">{errors.username.message}</span>
+          <span className="text-red-500 text-xs">
+            {errors.username.message}
+          </span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-sm font-bold">
         Email
         <input
           type="email"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           {...register("email", {
             required: "This field is required",
           })}></input>
         {errors.email && (
-          <span className="text-red-500">{errors.email.message}</span>
+          <span className="text-red-500 text-xs">{errors.email.message}</span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-sm font-bold">
         Password
         <input
           type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           {...register("password", {
             required: "This field is required!",
             minLength: {
@@ -79,31 +84,35 @@ const SignUp = () => {
             },
           })}></input>
         {errors.password && (
-          <span className="text-red-500">{errors.password.message}</span>
+          <span className="text-red-500 text-xs">
+            {errors.password.message}
+          </span>
         )}
       </label>
-      <label className="text-gray-700 text-sm font-bold flex-1">
+      <label className="text-gray-700 text-sm font-bold">
         Confirm Password
         <input
           type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
+          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
           {...register("confirmPassword", {
             required: "This field is required!",
             validate: (value) =>
               value === watch("password") || "Passwords don't match!",
           })}></input>
         {errors.confirmPassword && (
-          <span className="text-red-500">{errors.confirmPassword.message}</span>
+          <span className="text-red-500 text-xs">
+            {errors.confirmPassword.message}
+          </span>
         )}
       </label>
       <button
         type="submit"
-        className="bg-green-800 hover:text-green-400  text-white font-bold py-2 px-4 rounded">
+        className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         Register
       </button>
-      <span className="text-sm">
-        already registered?{" "}
-        <Link to="/sign-in" className="underline">
+      <span className="text-sm text-center">
+        Already registered?{" "}
+        <Link to="/sign-in" className="underline text-green-800">
           Sign-in
         </Link>
       </span>

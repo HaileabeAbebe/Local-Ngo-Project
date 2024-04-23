@@ -66,7 +66,9 @@ const ProjectDetailsSection = () => {
               ["ongoing", "finished"].includes(value) || "Invalid status",
           })}
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-800">
-          <option value="">Select status</option>
+          <option value="" disabled>
+            Select status
+          </option>
           <option value="ongoing">Ongoing</option>
           <option value="finished">Finished</option>
         </select>
@@ -99,7 +101,7 @@ const ProjectDetailsSection = () => {
           type="date"
           id="endDate"
           placeholder="Select end date"
-          {...register("endDate")}
+          {...register("endDate", { required: "This field is required" })}
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
         />
         {errors.endDate && (
