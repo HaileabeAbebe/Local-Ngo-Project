@@ -1,14 +1,14 @@
 import { useMutation } from "react-query";
-import ManageProjectForm from "../../forms/ManageProjectForm/ManageProjectForm";
 import * as apiCall from "../../services/apiCall";
 import { useAppContext } from "../../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
+import ManageProjectForm from "../../forms/ProjectForm/ManageProjectForm";
 
 const AddProject = () => {
   const { showToast } = useAppContext();
   const navigate = useNavigate();
 
-  const { mutate, isLoading } = useMutation(apiCall.addProject, {
+  const { mutate, isLoading } = useMutation(apiCall.createProject, {
     onSuccess: () => {
       showToast({ message: "Project created successfully!", type: "SUCCESS" });
       navigate("/projects");

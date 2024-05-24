@@ -4,10 +4,12 @@ import NewsSection from "../components/NewsSection";
 import ProjectsSection from "../components/ProjectsSection";
 import TeamSection from "../components/TeamSection";
 import TestimonialsSection from "../components/TestimonialSection";
+import HeroSection from "./../components/Hero";
 
 const Home = () => {
   return (
-    <div className="flex flex-col mt-10 gap-12">
+    <div className="flex flex-col gap-12">
+      <HeroSection />
       <ProjectsSection />
       <FeaturedSection />
       <NewsLetterSection />

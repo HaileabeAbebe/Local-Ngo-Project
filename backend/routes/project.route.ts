@@ -46,10 +46,6 @@ const upload = multer({
   },
 });
 
-// Define the routes
-router.get("/", projectController.fetchProjects);
-router.get("/:projectId", projectController.fetchProject);
-
 // The POST route uses the upload.fields function to handle multiple types of files.
 // The 'imageFiles' field is used for image uploads and the 'docFiles' field is used for document uploads.
 router.post(
@@ -68,7 +64,7 @@ router.post(
 router.put(
   "/:projectId",
   isAuthenticated,
-  isAdminOrOwner(Project),
+  isAdminOrOwner(Project, "projectId"),
   upload.fields([
     { name: "imageFiles", maxCount: 6 },
     { name: "docFiles", maxCount: 3 },
@@ -77,14 +73,18 @@ router.put(
   projectController.updateProject
 );
 
+// DELETE
 router.delete(
   "/:projectId",
   isAuthenticated,
-  isAdminOrOwner(Project),
+  isAdminOrOwner(Project, "projectId"),
   projectController.deleteProject
 );
 
-// Export the router
+// GET
+router.get("/", projectController.fetchProjects);
+router.get("/:projectId", projectController.fetchSingleProject);
+
 export default router;
 
 // import { Router } from "express";

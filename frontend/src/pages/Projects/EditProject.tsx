@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as apiCall from "../../services/apiCall";
-import ManageProjectForm from "../../forms/ManageProjectForm/ManageProjectForm";
 import { useAppContext } from "../../contexts/AppContext";
+import ManageProjectForm from "../../forms/ProjectForm/ManageProjectForm";
 
 const EditProject = () => {
   const { projectId } = useParams();
   const { showToast } = useAppContext();
-
+  const navigate = useNavigate();
   const { data: project, refetch } = useQuery(
     "fetchProjectById",
     () => apiCall.fetchProjectById(projectId || ""),
@@ -20,6 +20,7 @@ const EditProject = () => {
     onSuccess: () => {
       showToast({ message: "Project updated successfully", type: "SUCCESS" });
       refetch();
+      navigate(`/project/${project._id}`);
     },
     onError: async (error) => {
       if (error instanceof Response) {

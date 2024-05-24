@@ -43,8 +43,4 @@ function imageArrayLimit(val: string[]) {
   return val.length >= 1 && val.length <= 6;
 }
 
-// function docArrayLimit(val: string[]) {
-//   return val.length <= 3;
-// }
-
 export default mongoose.model<IProject>("Project", projectSchema);

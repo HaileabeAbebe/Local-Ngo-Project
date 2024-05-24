@@ -23,3 +23,11 @@ export interface IProject {
   isApproved: boolean;
   lastUpdated: Date;
 }
+
+export interface INews {
+  title: string;
+  content: string;
+  date: Date;
+  createdBy: string;
+  imageUrls: string[];
+}

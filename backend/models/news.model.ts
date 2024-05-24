@@ -3,17 +3,29 @@ import mongoose from "mongoose";
 interface INews extends mongoose.Document {
   title: string;
   content: string;
-  date: Date;
-  author: mongoose.Schema.Types.ObjectId; // Reference to User model
-  imageURL: string;
+  createdBy: mongoose.Schema.Types.ObjectId;
+  imageUrls: string[];
 }
 
-const newsSchema = new mongoose.Schema<INews>({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-  date: { type: Date, default: Date.now },
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  imageURL: { type: String },
-});
+const newsSchema = new mongoose.Schema<INews>(
+  {
+    title: { type: String, required: true, unique: true },
+    content: { type: String, required: true, minlength: 5 },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    imageUrls: {
+      type: [String],
+      validate: [arrayLimit, "{PATH} exceeds the limit of 5 images"],
+    },
+  },
+  { timestamps: true }
+);
+
+function arrayLimit(val: string[]) {
+  return val.length <= 5;
+}
 
 export default mongoose.model<INews>("News", newsSchema);

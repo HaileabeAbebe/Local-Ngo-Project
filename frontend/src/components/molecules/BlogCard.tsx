@@ -21,7 +21,7 @@ const BlogCard: React.FC<Props> = ({ blog }) => {
       </div>
       <div className="flex items-center mb-6 text-gray-700">
         <FiUser className="mr-2" />
-        Author: {blog.author}
+        createdBy: {blog.createdBy}
       </div>
       {blog.imageURL && (
         <div className="mt-6">

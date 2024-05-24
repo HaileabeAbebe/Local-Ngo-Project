@@ -1,39 +1,143 @@
-import { FC } from "react";
-import { Link } from "react-router-dom";
-import jungleImage from "../assets/images/jungle.jpg"; // Update the path if needed
+import { FC, useEffect, useState, useRef } from "react";
+import { useQuery } from "react-query";
+import { IProject } from "../utils/types";
+import { fetchProjects } from "../services/apiCall";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/splide/dist/css/themes/splide-default.min.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 const HeroSection: FC = () => {
+  const { data: projects = [] } = useQuery<IProject[]>(
+    "projects",
+    fetchProjects
+  );
+  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
+  const splideRef = useRef<Splide | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      if (splideRef.current) {
+        splideRef.current.go("+1"); // Go to the next slide
+      }
+    }, 4000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  const handleProjectClick = (index: number) => {
+    setCurrentProjectIndex(index);
+    if (splideRef.current) {
+      splideRef.current.go(index); // Go to the clicked slide
+    }
+    // Clear and restart the interval after user interaction
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(() => {
+        if (splideRef.current) {
+          splideRef.current.go("+1"); // Go to the next slide
+        }
+      }, 4000);
+    }
+  };
+
+  const handleSlideChange = (splide: any) => {
+    setCurrentProjectIndex(splide.index);
+  };
+
+  const latestProjects = projects.slice(0, 3);
+
   return (
-    <header
-      className="relative bg-cover bg-center h-screen text-white"
-      style={{
-        backgroundImage: `url(${jungleImage})`,
-        backgroundSize: "cover",
-      }}>
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="relative flex flex-col items-center justify-center h-full text-center">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-            Empowering Communities to Protect Our Environment
-          </h1>
-          <p className="mt-4 text-xl sm:text-2xl">
-            Join us in our mission to create a sustainable future for all.
-          </p>
-          <div className="mt-8 space-x-4">
-            <Link
-              to="/projects"
-              className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-800 hover:bg-green-900 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 md:py-3 md:text-lg md:px-8">
-              Learn More
-            </Link>
-            <Link
-              to="/sign-up"
-              className="inline-flex items-center justify-center px-6 py-2 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-orange-600 hover:text-white transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 md:py-3 md:text-lg md:px-8">
-              Sign Up
-            </Link>
-          </div>
+    <section className="bg-gray-100 text-white relative">
+      {latestProjects.length > 0 && (
+        <Splide
+          options={{
+            type: "loop",
+            autoplay: false, // Disable Splide's autoplay
+            speed: 1200,
+            pauseOnHover: false,
+          }}
+          ref={splideRef}
+          onMoved={handleSlideChange}>
+          {latestProjects.map((project, index) => (
+            <SplideSlide key={project.id}>
+              <div
+                className="h-[75vh] bg-cover bg-center flex items-center justify-center relative"
+                style={{
+                  backgroundImage: `url(${project.imageUrls[0]})`,
+                }}
+                onClick={() => handleProjectClick(index)}>
+                <div className="absolute inset-0 bg-black opacity-50"></div>
+                <AnimatePresence>
+                  {currentProjectIndex === index && (
+                    <motion.div
+                      className="text-center w-3/4 z-10"
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}>
+                      <motion.h1
+                        className="text-4xl font-bold text-white capitalize mb-4"
+                        initial={{ opacity: 0, x: 300 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: 0.5,
+                          ease: "easeOut",
+                        }}>
+                        {project.title}
+                      </motion.h1>
+                      <motion.p
+                        className="text-lg text-white max-w-md mx-auto mb-8"
+                        initial={{ opacity: 0, x: -300 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.5,
+                          delay: 0.5,
+                          ease: "easeOut",
+                        }}>
+                        {project.description.length > 150
+                          ? `${project.description.slice(0, 150)}...`
+                          : project.description}
+                      </motion.p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </SplideSlide>
+          ))}
+        </Splide>
+      )}
+
+      {/* Static "Other Projects" Box */}
+      {projects && projects.length > 0 && (
+        <div
+          className="absolute top-0 right-32 w-[22%] lg:pt-8 md:pt-4 lg:px-8 md:px-6 px-4 bg-green-500 bg-opacity-50 z-10 space-y-4 hidden md:block"
+          style={{ height: "75vh" }}>
+          <h2 className="text-lg font-bold text-white">Other Projects</h2>
+          {latestProjects.map((project, index) => (
+            <div
+              key={project._id}
+              className="cursor-pointer flex flex-col justify-between py-3 border-b border-gray-100"
+              onClick={() => handleProjectClick(index)}>
+              <div>
+                <h3 className="text-lg font-semibold text-white capitalize">
+                  {project.title}
+                </h3>
+                <p className="text-sm text-gray-200 lg:mb-5 md:mb-2 capitalize">
+                  {project.description.length > 70
+                    ? `${project.description.slice(0, 70)}...`
+                    : project.description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    </header>
+      )}
+    </section>
   );
 };
 

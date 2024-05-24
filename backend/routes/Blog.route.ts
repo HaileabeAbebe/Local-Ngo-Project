@@ -36,7 +36,7 @@ router.get("/:blogId", blogController.fetchBlog);
 router.put(
   "/:blogId",
   isAuthenticated,
-  isAdminOrOwner(Blog),
+  isAdminOrOwner(Blog, "blogId"),
   validateBlogUpdate,
   blogController.updateBlog
 );
@@ -44,7 +44,7 @@ router.put(
 router.delete(
   "/:blogId",
   isAuthenticated,
-  isAdminOrOwner(Blog),
+  isAdminOrOwner(Blog, "blogId"),
   blogController.deleteBlog
 );
 

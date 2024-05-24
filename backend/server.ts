@@ -8,7 +8,9 @@ import userRoutes from "./routes/user.route";
 import authRoutes from "./routes/auth.route";
 import adminRoutes from "./routes/admin.route";
 import projectRoutes from "./routes/project.route";
+import newsRoutes from "./routes/news.route";
 import blogRoutes from "./routes/blog.route";
+import downloadRoutes from "./routes/download.route";
 import { CustomError } from "./utils/createError";
 
 // Create an instance of the Express server
@@ -46,7 +48,9 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/news", newsRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/downloads", downloadRoutes);
 
 // handling error
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {

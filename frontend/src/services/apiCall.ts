@@ -1,8 +1,7 @@
-import { IProject } from "../components/molecules/ProjectCard";
+import { IProject } from "../components/projects/ProjectCard";
 import { SignInFormData } from "../pages/SignIn";
 import { RegisterFormData } from "../pages/SignUp";
-import { IBlog, INews } from "../utils/types";
-
+import { IBlog, IDownload, INews } from "../utils/types";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // SignUp
@@ -38,6 +37,36 @@ export const signIn = async (formData: SignInFormData) => {
 
   if (!response.ok) {
     throw new Error(responseBody.message);
+  }
+
+  return responseBody;
+};
+
+// Google SignIn
+
+interface TokenResponse {
+  credential: string;
+}
+
+export const googleSignIn = async (tokenResponse: TokenResponse) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/google-sign-in`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(tokenResponse),
+  });
+
+  let responseBody;
+  try {
+    responseBody = await response.json();
+  } catch (error) {
+    throw new Error("Failed to parse response");
+  }
+
+  if (!response.ok) {
+    throw new Error(responseBody.message || "Google sign-in failed");
   }
 
   return responseBody;
@@ -109,19 +138,31 @@ export const fetchProjectById = async (projectId: string) => {
 };
 
 // Add Project
-export const addProject = async (projectFormData: FormData) => {
-  const response = await fetch(`${API_BASE_URL}/api/projects`, {
-    method: "POST",
-    credentials: "include",
-    body: projectFormData,
-  });
+export const createProject = async (projectFormData: FormData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/projects`, {
+      method: "POST",
+      credentials: "include",
+      body: projectFormData,
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message);
+    if (!response.ok) {
+      // If response status is not OK, handle error
+      if (response.status === 500) {
+        // Handle 500 Internal Server Error
+        throw new Error("Internal Server Error");
+      } else {
+        // For other error statuses, parse error response
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Unknown Error");
+      }
+    }
+
+    return response.json();
+  } catch (error) {
+    // Handle network errors or parsing errors
+    throw new Error("Error processing request");
   }
-
-  return response.json();
 };
 
 // Edit Project
@@ -141,8 +182,6 @@ export const updateProjectById = async (
     const errorData = await response.json();
     throw new Error(errorData.message);
   }
-
-  console.log(response);
   return response.json();
 };
 
@@ -271,8 +310,7 @@ export const fetchNewsById = async (newsId: string) => {
 };
 
 // Add news
-
-export const addNews = async (newsFormData: FormData) => {
+export const createNews = async (newsFormData: FormData) => {
   const response = await fetch(`${API_BASE_URL}/api/news`, {
     method: "POST",
     credentials: "include",
@@ -280,9 +318,11 @@ export const addNews = async (newsFormData: FormData) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message);
+    throw new Error("Failed to add news!");
   }
+
+  const text = await response.text();
+  return text ? JSON.parse(text) : {};
 
   return response.json();
 };
@@ -304,8 +344,6 @@ export const updateNewsById = async (
     const errorData = await response.json();
     throw new Error(errorData.message);
   }
-
-  console.log(response);
   return response.json();
 };
 
@@ -319,9 +357,107 @@ export const deleteNewsById = async (newsId: string) => {
   if (!response.ok) {
     throw new Error("Error deleting news");
   }
+};
 
-  // if (!response.ok) {
-  //   const errorData = await response.json();
-  //   throw new Error(errorData.message);
-  // }
+// Download
+
+export const createDownload = async (
+  downloadFormData: FormData
+): Promise<IDownload> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/downloads`, {
+      method: "POST",
+      credentials: "include",
+      body: downloadFormData,
+    });
+
+    console.log(response);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to create download: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+    const data: IDownload = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error creating download:", error);
+    throw new Error(
+      "There was a problem creating the download. Please try again later."
+    );
+  }
+};
+
+export const updateDownload = async (
+  id: string,
+  downloadFormData: FormData
+): Promise<IDownload> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/downloads/${id}`, {
+      method: "PUT",
+      body: downloadFormData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to update download: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    const data: IDownload = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating download:", error);
+    throw new Error(
+      "There was a problem updating the download. Please try again later."
+    );
+  }
+};
+
+export const fetchDownloads = async (): Promise<IDownload[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/downloads`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to fetch downloads: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    const data: IDownload[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching downloads:", error);
+    throw new Error(
+      "There was a problem fetching the downloads. Please try again later."
+    );
+  }
+};
+
+export const fetchDownloadById = async (id: string): Promise<IDownload> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/downloads/${id}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to fetch download by ID: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    const data: IDownload = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching download by ID:", error);
+    throw new Error(
+      "There was a problem fetching the download. Please try again later."
+    );
+  }
 };

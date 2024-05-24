@@ -32,13 +32,12 @@ const ManageBlogForm = ({ onSave, isLoading, blog }: Props) => {
     formData.append("title", formDataJson.title);
     formData.append("content", formDataJson.content);
     formData.append("date", formDataJson.date.toString());
-    formData.append("author", formDataJson.author);
+    formData.append("createdBy", formDataJson.createdBy);
     if (formDataJson.imageFiles) {
       Array.from(formDataJson.imageFiles).forEach((file, index) => {
         formData.append(`imageFiles[${index}]`, file);
       });
     }
-    
 
     onSave(formData);
   });

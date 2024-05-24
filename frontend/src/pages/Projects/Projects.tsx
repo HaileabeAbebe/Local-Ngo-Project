@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import ProjectCard, { IProject } from "../../components/molecules/ProjectCard";
+import ProjectList from "../../components/projects/ProjectList";
 import * as apiCall from "../../services/apiCall";
 import { useAppContext } from "../../contexts/AppContext";
+import { IProject } from "../../utils/types";
 
 const Projects: React.FC = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recent");
   const { isLoggedIn, user } = useAppContext();
 
-  const { data: projectsData } = useQuery<IProject[]>(
+  const { data: projectsData, isLoading } = useQuery<IProject[]>(
     "fetchProjects",
     apiCall.fetchProjects,
     {
@@ -22,33 +23,31 @@ const Projects: React.FC = () => {
     }
   );
 
-  if (!projectsData || (projectsData as IProject[]).length === 0) {
-    return <span>No Project found</span>;
-  }
-
-  const filteredProjects = (projectsData as IProject[])
-    .filter((project) =>
-      project.title.toLowerCase().includes(search.toLowerCase())
-    )
-    .sort((a, b) => {
-      switch (sort) {
-        case "asc":
-          return a.title.localeCompare(b.title);
-        case "desc":
-          return b.title.localeCompare(a.title);
-        case "recent":
-          if (a.lastUpdated && b.lastUpdated) {
-            return (
-              new Date(b.lastUpdated).getTime() -
-              new Date(a.lastUpdated).getTime()
-            );
-          } else {
-            return 0;
+  const filteredProjects = projectsData
+    ? (projectsData as IProject[])
+        .filter((project) =>
+          project.title.toLowerCase().includes(search.toLowerCase())
+        )
+        .sort((a, b) => {
+          switch (sort) {
+            case "asc":
+              return a.title.localeCompare(b.title);
+            case "desc":
+              return b.title.localeCompare(a.title);
+            case "recent":
+              if (a.lastUpdated && b.lastUpdated) {
+                return (
+                  new Date(b.lastUpdated).getTime() -
+                  new Date(a.lastUpdated).getTime()
+                );
+              } else {
+                return 0;
+              }
+            default:
+              return 0;
           }
-        default:
-          return 0;
-      }
-    });
+        })
+    : [];
 
   return (
     <div className="bg-white py-4">
@@ -75,6 +74,7 @@ const Projects: React.FC = () => {
       </div>
       <div className="mb-4">
         <select
+          title="Sort order"
           value={sort}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
             setSort(e.target.value)
@@ -85,9 +85,7 @@ const Projects: React.FC = () => {
           <option value="recent">Sort by recent</option>
         </select>
       </div>
-      {filteredProjects.map((project: IProject) => (
-        <ProjectCard key={project._id} project={project} />
-      ))}
+      <ProjectList projects={filteredProjects} isLoading={isLoading} />
     </div>
   );
 };

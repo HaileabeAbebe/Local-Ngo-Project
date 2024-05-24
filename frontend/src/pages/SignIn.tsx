@@ -1,6 +1,8 @@
+import { GoogleLogin } from "@react-oauth/google";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import * as apiCall from "../services/apiCall";
 import { useAppContext } from "../contexts/AppContext";
 
@@ -10,6 +12,7 @@ export type SignInFormData = {
 };
 
 const SignIn = () => {
+  const { t } = useTranslation();
   const { showToast, setLoginStatus } = useAppContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -22,7 +25,7 @@ const SignIn = () => {
 
   const mutation = useMutation(apiCall.signIn, {
     onSuccess: async () => {
-      showToast({ message: "Logged in Successfully!", type: "SUCCESS" });
+      showToast({ message: t("loginSuccess"), type: "SUCCESS" });
       await queryClient.invalidateQueries("validateToken");
       setLoginStatus(true);
       navigate("/");
@@ -36,62 +39,83 @@ const SignIn = () => {
     mutation.mutate(data);
   });
 
+  const handleGoogleLoginSuccess = async (response) => {
+    try {
+      const googleResponse = await apiCall.googleSignIn({
+        credential: response.credential,
+      });
+      if (googleResponse.success) {
+        showToast({ message: t("googleLoginSuccess"), type: "SUCCESS" });
+        await queryClient.invalidateQueries("validateToken");
+        setLoginStatus(true);
+        navigate("/");
+      } else {
+        throw new Error(t("googleLoginFailed"));
+      }
+    } catch (error) {
+      showToast({ message: error.message, type: "ERROR" });
+    }
+  };
+
   return (
-    <form
-      className="container mx-auto w-1/2 flex flex-col gap-5 p-10 rounded-lg shadow-lg bg-white"
-      onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold mb-5 text-center text-green-800">
-        Sign In
-      </h2>
-      <label className="text-gray-700 text-sm font-bold mb-2">
-        Email
-        <input
-          type="email"
-          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
-          placeholder="bob@gmail.com"
-          {...register("email", {
-            required: "This field is required",
-          })}></input>
-        {errors.email && (
-          <span className="text-red-500">{errors.email.message}</span>
-        )}
-      </label>
-      <label className="text-gray-700 text-sm font-bold mb-2">
-        Password
-        <input
-          type="password"
-          placeholder="myPassword"
-          className="border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
-          {...register("password", {
-            required: "This field is required!",
-          })}></input>
-        {errors.password && (
-          <span className="text-red-500">{errors.password.message}</span>
-        )}
-      </label>
-      <div className="flex items-center justify-between mt-6">
-        <span className="text-sm">
-          Not Registered?{" "}
-          <Link to="/sign-up" className="underline text-orange-500">
-            Create an account
-          </Link>
-        </span>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form
+        className="w-full max-w-md p-10 md:p-12 bg-white rounded-lg shadow-lg"
+        onSubmit={onSubmit}>
+        <h2 className="text-4xl font-bold mb-10 text-center text-green-800">
+          {t("signIn")}
+        </h2>
+        <div className="mb-8">
+          <label className="block text-gray-700 text-base font-bold mb-2">
+            {t("email")}
+          </label>
+          <input
+            type="email"
+            className="border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="bob@gmail.com"
+            {...register("email", { required: t("fieldRequired") })}
+          />
+          {errors.email && (
+            <span className="text-red-500 text-sm">{errors.email.message}</span>
+          )}
+        </div>
+        <div className="mb-8">
+          <label className="block text-gray-700 text-base font-bold mb-2">
+            {t("password")}
+          </label>
+          <input
+            type="password"
+            className="border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="myPassword"
+            {...register("password", { required: t("fieldRequired") })}
+          />
+          {errors.password && (
+            <span className="text-red-500 text-sm">
+              {errors.password.message}
+            </span>
+          )}
+        </div>
         <button
           type="submit"
-          className="bg-green-800 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Login
+          className="bg-green-800 hover:bg-green-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline w-full mb-6">
+          {t("login")}
         </button>
-      </div>
-      <div className="mt-6">
-        <button
-          className="bg-gray-200 text-blue-800 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-          onClick={() => {
-            /* Add your Google Sign-In logic here */
-          }}>
-          Sign in with Google
-        </button>
-      </div>
-    </form>
+        <p className="text-sm text-center mb-6">
+          {t("notRegistered")}{" "}
+          <Link to="/sign-up" className="underline text-orange-500">
+            {t("createAccount")}
+          </Link>
+        </p>
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={() =>
+              showToast({ message: t("googleLoginFailed"), type: "ERROR" })
+            }
+          />
+        </div>
+      </form>
+    </div>
   );
 };
 

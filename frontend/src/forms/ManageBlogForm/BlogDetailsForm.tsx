@@ -52,14 +52,16 @@ const BlogDetailsForm = () => {
         )}
       </div>
       <div className="mb-4">
-        <label htmlFor="author" className="block text-gray-700 font-bold mb-2">
-          Author:
+        <label
+          htmlFor="createdBy"
+          className="block text-gray-700 font-bold mb-2">
+          createdBy:
         </label>
         <input
           type="text"
-          id="author"
-          placeholder="Name of the author"
-          {...register("author", { required: "This field is required" })}
+          id="createdBy"
+          placeholder="Name of the createdBy"
+          {...register("createdBy", { required: "This field is required" })}
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
         />
         {errors.date && <p className="text-red-500">{errors.date.message}</p>}

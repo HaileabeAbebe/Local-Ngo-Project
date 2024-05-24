@@ -1,16 +1,36 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { useAppContext } from "../../contexts/AppContext";
+
 const Profile: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAppContext();
+  const profileRef = useRef(null);
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative inline-block text-left  z-20">
+    <div className="relative z-20" ref={profileRef}>
       <button
-        className="inline-flex justify-center items-center text-base font-medium  hover:text-green-500 focus:outline-none"
+        type="button"
+        title="profile"
+        className="inline-flex justify-center items-center text-base font-medium hover:text-green-500 focus:outline-none"
         onClick={toggleOpen}>
         <FaUserAlt className="h-6 w-6" aria-hidden="true" />
       </button>

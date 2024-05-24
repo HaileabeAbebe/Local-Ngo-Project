@@ -47,7 +47,7 @@ const BlogDetail: React.FC = () => {
       </div>
       <div className="flex items-center mb-4 text-gray-700">
         <FiUser className="mr-2" />
-        Author: {blogData.author}
+        createdBy: {blogData.createdBy}
       </div>
       {blogData.imageURL && (
         <div className="mt-6">

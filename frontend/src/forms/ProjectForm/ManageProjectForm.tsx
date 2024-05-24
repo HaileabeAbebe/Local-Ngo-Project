@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
-import ProjectDetailsSection from "./ProjectDetailsForm";
-import ProjectImagesSection from "./ProjectImagesForm";
+import ProjectDetailsSection from "./ProjectDetailsSection";
+import ProjectImagesSection from "./ProjectImagesSection";
 import { useEffect } from "react";
 import ProjectDocumentsSection from "../../components/ProjectDocumentsSection";
 
@@ -29,11 +29,8 @@ const ManageProjectForm = ({ onSave, isLoading, project }: Props) => {
 
   useEffect(() => {
     if (project) {
-      // Format the dates to "yyyy-MM-dd"
       const startDate = new Date(project.startDate).toISOString().split("T")[0];
       const endDate = new Date(project.endDate).toISOString().split("T")[0];
-
-      // Use the formatted dates when resetting the form
       reset({ ...project, startDate, endDate });
     }
   }, [project, reset]);
@@ -49,11 +46,9 @@ const ManageProjectForm = ({ onSave, isLoading, project }: Props) => {
     formData.append("startDate", formDataJson.startDate.toString());
     formData.append("endDate", formDataJson.endDate.toString());
 
-    if (formDataJson.imageUrls) {
-      formDataJson.imageUrls.forEach((url, index) => {
-        formData.append(`imageUrls[${index}]`, url);
-      });
-    }
+    formDataJson.imageUrls.forEach((url, index) => {
+      formData.append(`imageUrls`, url);
+    });
 
     Array.from(formDataJson.imageFiles).forEach((imageFile) => {
       formData.append(`imageFiles`, imageFile);

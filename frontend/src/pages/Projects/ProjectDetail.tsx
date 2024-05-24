@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
-import { IProject } from "../../components/molecules/ProjectCard";
+import { IProject } from "../../components/projects/ProjectCard";
 import * as apiCall from "../../services/apiCall";
 import {
   FiEdit2,
@@ -10,7 +10,6 @@ import {
   FiCheckCircle,
   FiTrash2,
 } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
 
 const ProjectDetail: React.FC = () => {
@@ -18,6 +17,7 @@ const ProjectDetail: React.FC = () => {
   const { isLoggedIn, user } = useAppContext();
   const navigate = useNavigate();
 
+  // Fetch project data
   const { data: projectData } = useQuery<IProject>(
     ["fetchProject", projectId],
     () =>
@@ -31,6 +31,7 @@ const ProjectDetail: React.FC = () => {
     }
   );
 
+  // Mutation for deleting the project
   const mutation = useMutation(apiCall.deleteProjectById, {
     onSuccess: () => {
       navigate("/projects");
@@ -40,10 +41,12 @@ const ProjectDetail: React.FC = () => {
     },
   });
 
+  // Handle project deletion
   const handleDelete = () => {
     mutation.mutate(projectId);
   };
 
+  // Main image state
   const [mainImage, setMainImage] = useState<string | undefined>();
 
   useEffect(() => {
@@ -57,14 +60,14 @@ const ProjectDetail: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-green-800 mb-4">
+    <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-green-800">
           {projectData.title}
         </h1>
         {isLoggedIn &&
           user &&
-          (user._id === projectData.createdBy || user.role === "admin") && (
+          (user._id === projectData.createdBy._id || user.role === "admin") && (
             <div className="flex items-center space-x-4">
               <Link
                 to={`/edit-project/${projectData._id}`}
@@ -72,7 +75,6 @@ const ProjectDetail: React.FC = () => {
                 <FiEdit2 className="w-5 h-5" />
                 <span>Edit</span>
               </Link>
-
               <button
                 onClick={handleDelete}
                 className="flex items-center space-x-2 text-white bg-red-500 rounded px-3 py-1 hover:bg-red-700">
@@ -82,7 +84,7 @@ const ProjectDetail: React.FC = () => {
             </div>
           )}
       </div>
-      <p className="mb-4 text-gray-700">{projectData.description}</p>
+      <p className="mb-6 text-gray-700">{projectData.description}</p>
       <div className="flex items-center mb-4 text-gray-700">
         <FiCalendar className="mr-2" />
         Start Date: {new Date(projectData.startDate).toLocaleDateString()}
@@ -104,9 +106,9 @@ const ProjectDetail: React.FC = () => {
       <img
         src={mainImage}
         alt={projectData.title}
-        className="w-full object-cover h-[40vh] md:h-[60vh] lg:h-[70vh] rounded-lg shadow-md"
+        className="w-full object-cover h-[40vh] md:h-[60vh] lg:h-[70vh] rounded-lg shadow-md mb-4"
       />
-      <div className="grid grid-cols-3 gap-4 mt-4">
+      <div className="grid grid-cols-3 gap-4 mb-6">
         {projectData.imageUrls.map((url, index) => (
           <img
             key={index}
@@ -116,6 +118,22 @@ const ProjectDetail: React.FC = () => {
             onClick={() => setMainImage(url)}
           />
         ))}
+      </div>
+      <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+        <h2 className="text-xl font-bold text-green-800 mb-4">Documents</h2>
+        <ul className="list-disc list-inside">
+          {projectData.docUrls.map((url, index) => (
+            <li key={index} className="mb-2">
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline">
+                {`Document ${index + 1}`}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

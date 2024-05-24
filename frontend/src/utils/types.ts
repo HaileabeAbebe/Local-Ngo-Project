@@ -14,13 +14,15 @@ export interface IUser {
 }
 
 export interface IProject {
+  _id: string;
   title: string;
   description: string;
   status: string; // 'ongoing', 'finished'
   startDate: Date;
   endDate: Date;
   imageUrls: string[];
-  createdBy: string;
+  docUrls: string[];
+  createdBy: IUser;
   isApproved: boolean;
   lastUpdated: Date;
 }
@@ -31,7 +33,7 @@ export interface IBlog {
   title: string;
   content: string;
   date: Date;
-  author: string;
+  createdBy: string;
   imageURLs: string[];
 }
 // BlogFormData type
@@ -40,16 +42,28 @@ export interface BlogFormData {
   title: string;
   content: string;
   date: Date;
-  author: string;
+  createdBy: string;
   imageFiles: FileList;
   imageUrls: string[];
 }
+export interface INews {
+  _id: string;
+  title: string;
+  content: string;
+  date: Date;
+  createdBy: IUser;
+  imageUrls: string[];
+  updatedAt: Date;
+  createdAt: Date;
+}
 
-// export interface INews {
-//   _id: string;
-//   title: string;
-//   content: string;
-//   date: Date;
-//   author: string; // Reference to User model
-//   imageURL: string;
-// }
+export interface IDownload {
+  _id: string;
+  title: string;
+  category: string;
+  type: "manual" | "strategy";
+  accessLevel: "public" | "protected";
+  fileUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

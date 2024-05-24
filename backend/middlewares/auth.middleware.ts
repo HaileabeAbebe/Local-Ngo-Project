@@ -86,9 +86,10 @@ export const isOwner =
   };
 
 export const isAdminOrOwner =
-  (model: any) => async (req: Request, res: Response, next: NextFunction) => {
+  (model: any, idParam: string) =>
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const item = await model.findById(req.params.projectId);
+      const item = await model.findById(req.params[idParam]);
       if (!item) {
         return next(createError(404, "Item not found"));
       }

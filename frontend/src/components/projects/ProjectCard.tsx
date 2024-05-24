@@ -7,6 +7,7 @@ import {
   FiCalendar,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { IUser } from "../../utils/types";
 
 export interface IProject {
   _id: string;
@@ -17,7 +18,7 @@ export interface IProject {
   endDate: Date;
   imageUrls: string[];
   docUrls: string[];
-  createdBy: string;
+  createdBy: IUser;
   isApproved: boolean;
   lastUpdated?: Date;
 }
@@ -42,7 +43,7 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
   };
 
   return (
-    <div className="border border-gray-300 rounded p-6 m-4 flex flex-col items-start relative bg-white shadow-lg">
+    <div className="border border-gray-300 rounded-lg overflow-hidden shadow-lg bg-white transition-transform duration-500 ease-in-out transform w-full h-full p-6 flex flex-col">
       <div className="absolute top-2 right-2 flex items-center space-x-2">
         {project.status === "ongoing" ? (
           <FiClock className="text-green-500 w-7 h-7" />
@@ -50,24 +51,26 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
           <FiCheckCircle className="text-red-500 w-7 h-7" />
         )}
       </div>
-      <Link to={`/project/${project._id}`}>
-        <h2 className="text-2xl font-bold mb-4 text-green-800 truncate w-full">
+      <Link to={`/project/${project._id}`} className="flex-grow flex flex-col">
+        <h2 className="text-xl font-bold mb-2 text-gray-900 truncate">
           {project.title}
         </h2>
-        <p className="mb-6 text-gray-700 line-clamp-3">{project.description}</p>
+        <p className="text-gray-700 mb-4 line-clamp-3 flex-grow">
+          {project.description}
+        </p>
+        <div className="flex items-center text-gray-600 mb-2">
+          <FiCalendar className="mr-2" />
+          Start Date: {new Date(project.startDate).toLocaleDateString()}
+        </div>
+        <div className="flex items-center text-gray-600">
+          <FiCalendar className="mr-2" />
+          End Date: {new Date(project.endDate).toLocaleDateString()}
+        </div>
       </Link>
-      <div className="flex items-center mb-6 text-gray-700">
-        <FiCalendar className="mr-2" />
-        Start Date: {new Date(project.startDate).toLocaleDateString()}
-      </div>
-      <div className="flex items-center mb-6 text-gray-700">
-        <FiCalendar className="mr-2" />
-        End Date: {new Date(project.endDate).toLocaleDateString()}
-      </div>
-
       {project.imageUrls.length > 0 ? (
-        <div className="relative w-full mt-6 rounded overflow-hidden shadow">
+        <div className="relative w-full h-48 mt-2">
           <button
+            title="Previous image"
             style={{ zIndex: 1 }}
             className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-green-800 text-white rounded-r-full cursor-pointer hover:bg-green-700"
             onClick={handlePrevImage}>
@@ -76,13 +79,14 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
           <div>
             <Link to={`/project/${project._id}`}>
               <img
-                className="object-cover w-full h-64 transition-transform duration-500 ease-in-out transform hover:scale-105"
+                className="object-cover rounded-lg w-full h-full transition-transform duration-500 ease-in-out transform hover:scale-105 "
                 src={project.imageUrls[currentImageIndex]}
                 alt={project.title}
               />
             </Link>
           </div>
           <button
+            title="Next image"
             style={{ zIndex: 1 }}
             className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-green-800 text-white rounded-l-full cursor-pointer hover:bg-green-700"
             onClick={handleNextImage}>
@@ -90,7 +94,7 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
           </button>
         </div>
       ) : (
-        <p className="mt-6 text-gray-700">
+        <p className="mt-2 text-gray-700">
           No images available for this project.
         </p>
       )}

@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 interface IComment extends mongoose.Document {
   content: string;
   date: Date;
-  author: mongoose.Schema.Types.ObjectId; // Reference to User model
+  createdBy: mongoose.Schema.Types.ObjectId; // Reference to User model
   post: mongoose.Schema.Types.ObjectId; // Reference to News/Blog/Project model
   postType: string; // 'news', 'blog', 'project'
 }
@@ -17,8 +17,12 @@ const commentSchema = new mongoose.Schema<IComment>({
   // The date field defaults to the current date
   date: { type: Date, default: Date.now },
 
-  // The author field is a reference to the User model
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  // The createdBy field is a reference to the User model
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 
   // The post field is a reference to the post the comment is for
   post: { type: mongoose.Schema.Types.ObjectId, required: true },

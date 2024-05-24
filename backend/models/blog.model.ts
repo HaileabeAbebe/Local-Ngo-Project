@@ -5,7 +5,7 @@ interface IBlog extends mongoose.Document {
   title: string;
   content: string;
   date: Date;
-  author: mongoose.Schema.Types.ObjectId; // Reference to User model
+  createdBy: mongoose.Schema.Types.ObjectId; // Reference to User model
   imageUrls: string[];
   lastUpdated: Date;
 }
@@ -14,7 +14,11 @@ const blogSchema = new mongoose.Schema<IBlog>({
   title: { type: String, required: true },
   content: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   imageUrls: { type: [String] },
   lastUpdated: { type: Date, default: Date.now },
 });

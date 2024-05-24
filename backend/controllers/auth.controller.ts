@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
+import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
 
@@ -67,6 +68,52 @@ export const validateToken = (
     // If there's an error at any point in the try block, call the next function with the error.
     // This will skip any remaining route handlers and go straight to the error handling middleware.
     next(error);
+  }
+};
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleSignIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { credential } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      return next(createError(401, "Google sign-in failed"));
+    }
+
+    let user = await User.findOne({ email: payload.email });
+
+    if (!user) {
+      user = new User({ email: payload.email, username: payload.name });
+      await user.save();
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_SECRET_KEY as string
+    );
+
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return res.status(200).json({
+      message: "User logged in with Google successfully",
+      success: true,
+    });
+  } catch (error) {
+    next(createError(401, "Google sign-in failed"));
   }
 };
 
