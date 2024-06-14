@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 export interface IDownload extends mongoose.Document {
   title: string;
   category: string;
-  type: "manual" | "strategy";
-  accessLevel: "public" | "protected";
+  type: "manual" | "strategy" | "others";
+  accessLevel: "public" | "protected" | "private";
   fileUrl: string;
   createdBy: mongoose.Schema.Types.ObjectId;
 }
@@ -13,13 +13,17 @@ const downloadSchema = new mongoose.Schema<IDownload>(
   {
     title: { type: String, required: true },
     category: String,
-    type: { type: String, enum: ["manual", "strategy"], required: true },
-    accessLevel: {
+    type: {
       type: String,
-      enum: ["public", "protected"],
+      enum: ["manual", "strategy", "others"],
       required: true,
     },
-    fileUrl: { type: String, required: true },
+    accessLevel: {
+      type: String,
+      enum: ["public", "protected", "private"],
+      required: true,
+    },
+    fileUrl: { type: String },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

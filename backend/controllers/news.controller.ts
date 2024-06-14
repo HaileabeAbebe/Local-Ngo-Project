@@ -25,8 +25,7 @@ export const createNews = async (
       });
     }
 
-    const imageFiles = (req.files as any)["imageFiles"];
-
+    const imageFiles = req.files as Express.Multer.File[];
     const news = new News({
       ...req.body,
       createdBy: req.userId,
@@ -56,22 +55,20 @@ export const updateNews = async (
 
     const updatedNews: INews = req.body;
 
-    const imageFiles = (req.files as any)?.["imageFiles"];
-    let updatedImageUrls: string[] = [];
+    const news = await News.findOneAndUpdate(
+      { _id: req.params.newsId },
+      updatedNews,
+      { new: true }
+    );
 
-    if (imageFiles) {
-      updatedImageUrls = await uploadImages(imageFiles);
-    }
-
-    const news = await News.findById(req.params.newsId);
     if (!news) {
       return res.status(404).json({ message: "News article not found" });
     }
 
-    news.imageUrls = [...updatedImageUrls, ...(news.imageUrls || [])];
+    const files = req.files as Express.Multer.File[];
+    const updatedImageUrls = await uploadImages(files);
 
-    Object.assign(news, updatedNews);
-
+    news.imageUrls = [...(updatedNews.imageUrls || []), ...updatedImageUrls];
     await news.save();
     res.status(200).json(news);
   } catch (error) {
@@ -79,6 +76,7 @@ export const updateNews = async (
   }
 };
 
+// DELETE
 export const deleteNews = async (
   req: Request,
   res: Response,
@@ -127,10 +125,14 @@ export const fetchSingleNews = async (
   }
 };
 
-async function uploadImages(imageFiles: Express.Multer.File[]) {
+async function uploadImages(imageFiles: Express.Multer.File[] | undefined) {
+  if (!imageFiles || !Array.isArray(imageFiles)) {
+    return [];
+  }
+
   const uploadPromises = imageFiles.map(async (image) => {
     const b64 = Buffer.from(image.buffer).toString("base64");
-    let dataURI = "data:" + image.mimetype + ";base64," + b64;
+    const dataURI = "data:" + image.mimetype + ";base64," + b64;
     const res = await cloudinary.v2.uploader.upload(dataURI);
     return res.url;
   });

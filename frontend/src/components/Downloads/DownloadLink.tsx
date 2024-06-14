@@ -1,18 +1,25 @@
+import { IDownload } from "../../utils/types";
+import { FiDownload } from "react-icons/fi";
+import { saveAs } from "file-saver";
+
 interface DownloadLinkProps {
-  fileUrl: string;
-  title: string;
+  download: IDownload;
 }
 
-const DownloadLink: React.FC<DownloadLinkProps> = ({ fileUrl, title }) => {
+const DownloadLink: React.FC<DownloadLinkProps> = ({ download }) => {
+  const handleDownload = async () => {
+    const response = await fetch(download.fileUrl);
+    const blob = await response.blob();
+    saveAs(blob, download.title);
+  };
+
   return (
-    <a
-      href={fileUrl}
-      download
-      className="text-green-800 hover:underline"
-      target="_blank"
-      rel="noopener noreferrer">
-      {title}
-    </a>
+    <button
+      onClick={handleDownload}
+      className="flex items-center text-blue-800 text-xl hover:underline capitalize">
+      <FiDownload className="mr-2" />
+      {download.title}
+    </button>
   );
 };
 

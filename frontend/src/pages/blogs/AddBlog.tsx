@@ -1,7 +1,7 @@
 // AddBlog.tsx
 import { useMutation } from "react-query";
 import ManageBlogForm from "../../forms/ManageBlogForm/ManageBlogForm";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/blogService";
 import { useAppContext } from "../../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 

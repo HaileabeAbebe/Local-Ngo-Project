@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import BlogCard from "../../components/molecules/BlogCard";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/blogService";
 import { IBlog } from "../../utils/types";
 
 const Blogs: React.FC = () => {

@@ -6,7 +6,7 @@ export type DownloadFormData = {
   _id?: string;
   title: string;
   category: string;
-  type: "manual" | "strategy";
+  type: "manual" | "strategy" | "others";
   accessLevel: "public" | "protected";
   file: FileList;
 };

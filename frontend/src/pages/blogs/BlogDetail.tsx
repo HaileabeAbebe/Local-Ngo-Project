@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/blogService";
 import { FiCalendar, FiUser } from "react-icons/fi";
 import { IBlog } from "../../utils/types";
 

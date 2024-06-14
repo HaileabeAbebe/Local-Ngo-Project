@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/projectService";
 import { useAppContext } from "../../contexts/AppContext";
 import ManageProjectForm from "../../forms/ProjectForm/ManageProjectForm";
 
@@ -22,14 +22,8 @@ const EditProject = () => {
       refetch();
       navigate(`/project/${project._id}`);
     },
-    onError: async (error) => {
-      if (error instanceof Response) {
-        const err = await error.json();
-        showToast({ message: err.message, type: "ERROR" });
-      } else {
-        // Otherwise, it's a JavaScript error
-        showToast({ message: error.message, type: "ERROR" });
-      }
+    onError: (error: Error) => {
+      showToast({ message: error.message, type: "ERROR" });
     },
   });
 

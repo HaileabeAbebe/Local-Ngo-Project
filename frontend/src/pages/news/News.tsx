@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import NewsList from "../../components/news/NewsList";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/newsService";
 import { useAppContext } from "../../contexts/AppContext";
 import { INews } from "../../utils/types";
 

@@ -1,11 +1,18 @@
 import { useFormContext } from "react-hook-form";
-import { ProjectFormData } from "./ManageProjectForm";
+import { ProjectFormData } from "../../utils/types";
 
 const ProjectDetailsSection = () => {
   const {
     register,
     formState: { errors },
+    watch,
   } = useFormContext<ProjectFormData>();
+
+  const startDate = watch("startDate");
+  const maxFutureDate = new Date();
+  maxFutureDate.setFullYear(maxFutureDate.getFullYear() + 5);
+
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -86,7 +93,18 @@ const ProjectDetailsSection = () => {
           type="date"
           id="startDate"
           placeholder="Select start date"
-          {...register("startDate", { required: "This field is required" })}
+          {...register("startDate", {
+            required: "Start date is required",
+            validate: {
+              notTooFar: (value) => {
+                const startDateValue = new Date(value);
+                return (
+                  startDateValue <= maxFutureDate ||
+                  "Start date cannot be more than 5 years in the future"
+                );
+              },
+            },
+          })}
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
         />
         {errors.startDate && (
@@ -101,7 +119,26 @@ const ProjectDetailsSection = () => {
           type="date"
           id="endDate"
           placeholder="Select end date"
-          {...register("endDate", { required: "This field is required" })}
+          {...register("endDate", {
+            required: "End date is required",
+            validate: {
+              afterStartDate: (value) => {
+                const endDateValue = new Date(value);
+                const startDateValue = new Date(startDate);
+                return (
+                  endDateValue > startDateValue ||
+                  "End date must be after the start date"
+                );
+              },
+              notTooFar: (value) => {
+                const endDateValue = new Date(value);
+                return (
+                  endDateValue <= maxFutureDate ||
+                  "End date cannot be more than 5 years in the future"
+                );
+              },
+            },
+          })}
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
         />
         {errors.endDate && (

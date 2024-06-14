@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/newsService";
 import { useAppContext } from "../../contexts/AppContext";
 import ManageNewsForm from "../../forms/NewsForm/ManageNewsForm";
 

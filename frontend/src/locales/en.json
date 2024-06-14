@@ -33,5 +33,7 @@
   "officialProfile": "Official Profile",
   "backgroundHistory": "Background History",
   "missionVisionValues": "Mission Vision Values",
-  "organizationalStructure": "Organizational Structure"
+  "organizationalStructure": "Organizational Structure",
+  "fieldRequired": "Field Required",
+  "others": "Others"
 }

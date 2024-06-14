@@ -30,6 +30,7 @@ export const validateProjectCreation = [
 ];
 
 // Validate project update
+
 export const validateProjectUpdate = [
   body("title")
     .optional()
@@ -41,20 +42,20 @@ export const validateProjectUpdate = [
     .optional()
     .notEmpty()
     .withMessage("Description is required")
-    .isLength({ min: 20 })
-    .withMessage("Description should be at least 20 characters"),
+    .isLength({ min: 15 })
+    .withMessage("Description should be at least 15 characters"),
   body("status")
     .optional()
     .isIn(["ongoing", "finished"])
     .withMessage("Invalid status"),
-  body("imageUrls.*").optional().isURL().withMessage("Invalid image URL"),
   body("imageUrls")
     .optional()
     .isArray({ min: 1, max: 6 })
     .withMessage("There should be at least 1 and at most 6 images"),
-  body("docUrls.*").optional().isURL().withMessage("Invalid document URL"),
+  body("imageUrls.*").optional().isURL().withMessage("Invalid image URL"),
   body("docUrls")
     .optional()
     .isArray({ max: 3 })
     .withMessage("There should be at most 3 documents"),
+  body("docUrls.*").optional().isURL().withMessage("Invalid document URL"),
 ];

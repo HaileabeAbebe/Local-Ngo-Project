@@ -18,14 +18,14 @@ const newsSchema = new mongoose.Schema<INews>(
     },
     imageUrls: {
       type: [String],
-      validate: [arrayLimit, "{PATH} exceeds the limit of 5 images"],
+      validate: [arrayLimit, "{PATH} exceeds the limit of 6 images"],
     },
   },
   { timestamps: true }
 );
 
 function arrayLimit(val: string[]) {
-  return val.length <= 5;
+  return val.length <= 6;
 }
 
 export default mongoose.model<INews>("News", newsSchema);

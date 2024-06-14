@@ -10,20 +10,22 @@ import adminRoutes from "./routes/admin.route";
 import projectRoutes from "./routes/project.route";
 import newsRoutes from "./routes/news.route";
 import blogRoutes from "./routes/blog.route";
+import eventRoutes from "./routes/event.route";
+import announcementRoutes from "./routes/announcement.route";
 import downloadRoutes from "./routes/download.route";
 import { CustomError } from "./utils/createError";
 
 // Create an instance of the Express server
 const app = express();
 // Define the port to run the server on
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING_LOCAL as string);
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -51,15 +53,17 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/downloads", downloadRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/announcements", announcementRoutes);
 
 // handling error
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   const errorStatus = err.status || 500;
-  const errorMessage = err.message || "Something went wrong!";
+  const errorMessage = err.message || "Network Issue your connection is slow";
   res.status(errorStatus).send(errorMessage);
   next();
 });
 
 app.listen(port, () => {
-  console.log(`server started on port ${port}`);
+  console.log(`server is running on port ${port}`);
 });

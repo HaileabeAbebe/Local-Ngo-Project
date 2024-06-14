@@ -1,4 +1,5 @@
-import ProjectCard, { IProject } from "./ProjectCard";
+import { IProject } from "../../utils/types";
+import ProjectCard from "./ProjectCard";
 import { FiLoader } from "react-icons/fi";
 
 interface ProjectListProps {

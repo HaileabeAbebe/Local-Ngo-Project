@@ -12,7 +12,7 @@
   "signUp": "ተመዝገብ",
   "language": "ቋንቋ",
   "join": "ግባ",
-  "officialProfile": "መገለጫ",
+  "officialProfile": "ይፋዊ ገጽ",
   "backgroundHistory": "የኅላ ታሪክ",
   "missionVisionValues": "ተልዕኮ ራዕይ እሴቶች",
   "organizationalStructure": "ድርጅታዊ መዋቅር",
@@ -31,5 +31,8 @@
   "username": "የተጠቃሚ ስም",
   "confirmPassword": "የይለፍ ቃሎን ያረጋግጡ",
   "alreadyRegistered": "ተመዝግበው ነበር",
-  "register": "ተመዝገብ"
+  "register": "ተመዝገብ",
+  "termAndConditions": "አተገባባር እና መመሪያዎች",
+  "fieldRequired": "መሞላት ያለበት",
+  "others": "ሌሎች"
 }

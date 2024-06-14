@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-
 import Contact from "./pages/Contact";
 import Layout from "./layouts/Layout";
 import NotFound from "./pages/NotFound";
@@ -15,19 +14,35 @@ import AddBlog from "./pages/blogs/AddBlog";
 import BlogDetail from "./pages/blogs/BlogDetail";
 import Projects from "./pages/projects/Projects";
 import News from "./pages/news/News";
-import Events from "./pages/events/Events.tsx";
-import BackgroundHistory from "./pages/AboutUs/BackgroundHistory.tsx";
-import MissionVisionValues from "./pages/AboutUs/MissionVisionValues.tsx";
-import OrganizationalStructure from "./pages/AboutUs/OrganizationalStructure.tsx";
-import Strategies from "./pages/Downloads/Strategies.tsx";
-import Announcements from "./pages/Announcements/Announcements.tsx";
-import AddNews from "./pages/news/AddNews.tsx";
-import EditNews from "./pages/news/EditNews.tsx";
-import NewsDetail from "./pages/news/NewsDetail.tsx";
-import OfficialProfile from "./pages/AboutUs/OfficialProfile.tsx";
-import Manuals from "./pages/Downloads/Manuals.tsx";
-import AddDownload from "./pages/Downloads/AddDownloads.tsx";
-import TermAndConditions from "./pages/TermAndConditions.tsx";
+import Events from "./pages/events/Events";
+import BackgroundHistory from "./pages/AboutUs/BackgroundHistory";
+import MissionVisionValues from "./pages/AboutUs/MissionVisionValues";
+import OrganizationalStructure from "./pages/AboutUs/OrganizationalStructure";
+import Strategies from "./pages/Downloads/Strategies";
+import Announcements from "./pages/Announcements/Announcements";
+import AddNews from "./pages/news/AddNews";
+import EditNews from "./pages/news/EditNews";
+import NewsDetail from "./pages/news/NewsDetail";
+import OfficialProfile from "./pages/AboutUs/OfficialProfile";
+import Manuals from "./pages/Downloads/Manuals";
+import AddDownload from "./pages/Downloads/AddDownloads";
+import TermAndConditions from "./pages/TermAndConditions";
+import EditDownload from "./pages/Downloads/EditDownloads";
+import Downloads from "./pages/Downloads/Downloads";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import ProtectedAdminRoute from "./components/molecules/ProtectedAdminRoute";
+import ProtectedRoute from "./components/molecules/ProtectedRoute";
+import OthersDownload from "./pages/Downloads/OthersDownload";
+import AddEvent from "./pages/events/AddEvent";
+import AddAnnouncement from "./pages/Announcements/AddAnnouncement";
+import EventDetail from "./pages/events/EventDetail";
+import EditEvent from "./pages/events/EditEvent";
+import Users from "./pages/Admin/users/Users";
+import Analytics from "./pages/Admin/analytics";
+import AdminOverview from "./pages/Admin/AdminOverview";
+import AnnouncementDetail from "./pages/Announcements/AnnouncementDetail";
+// import TeamMembers from "./pages/Admin/TeamMembers";
+// import Settings from "./pages/Admin/Settings";
 
 const App: FC = () => {
   return (
@@ -40,6 +55,106 @@ const App: FC = () => {
           </Layout>
         }
       />
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedAdminRoute>
+            <AdminDashboard />
+          </ProtectedAdminRoute>
+        }>
+        <Route
+          path="/admin/overview"
+          element={
+            <ProtectedAdminRoute>
+              <AdminOverview />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="projects"
+          element={
+            <ProtectedAdminRoute>
+              <Projects />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="news"
+          element={
+            <ProtectedAdminRoute>
+              <News />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="add-news"
+          element={
+            <ProtectedAdminRoute>
+              <AddNews />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="edit-news/:newsId"
+          element={
+            <ProtectedAdminRoute>
+              <EditNews />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="news/:newsId"
+          element={
+            <ProtectedAdminRoute>
+              <NewsDetail />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="blogs"
+          element={
+            <ProtectedAdminRoute>
+              <Blogs />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="add-blog"
+          element={
+            <ProtectedAdminRoute>
+              <AddBlog />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="blogs/:blogId"
+          element={
+            <ProtectedAdminRoute>
+              <BlogDetail />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="users"
+          element={
+            <ProtectedAdminRoute>
+              <Users />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="analytics"
+          element={
+            <ProtectedAdminRoute>
+              <Analytics />
+            </ProtectedAdminRoute>
+          }
+        />
+        {/* <Route path="team-members" element={<ProtectedAdminRoute><TeamMembers /></ProtectedAdminRoute>} />
+  <Route path="settings" element={<ProtectedAdminRoute><Settings /></ProtectedAdminRoute>} /> */}
+      </Route>
+
       <Route
         path="/projects"
         element={
@@ -49,6 +164,35 @@ const App: FC = () => {
         }
       />
       <Route
+        path="/project/:projectId"
+        element={
+          <Layout>
+            <ProjectDetail />
+          </Layout>
+        }
+      />
+      <Route
+        path="/add-project"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AddProject />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-project/:projectId"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <EditProject />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/news"
         element={
           <Layout>
@@ -56,22 +200,28 @@ const App: FC = () => {
           </Layout>
         }
       />
+
       <Route
         path="/add-news"
         element={
-          <Layout>
-            <AddNews />
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <AddNews />
+            </Layout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/edit-news/:newsId"
         element={
-          <Layout>
-            <EditNews />
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <EditNews />
+            </Layout>
+          </ProtectedRoute>
         }
       />
+
       <Route
         path="/news/:newsId"
         element={
@@ -89,42 +239,26 @@ const App: FC = () => {
         }
       />
       <Route
-        path="/strategies"
+        path="/events/:eventId"
         element={
           <Layout>
-            <Strategies />
+            <EventDetail />
           </Layout>
         }
       />
       <Route
-        path="/term-conditions"
+        path="/add-event"
         element={
           <Layout>
-            <TermAndConditions />
+            <AddEvent />
           </Layout>
         }
       />
       <Route
-        path="/manuals"
+        path="/edit-event/:eventId"
         element={
           <Layout>
-            <Manuals />
-          </Layout>
-        }
-      />
-      <Route
-        path="/add-download"
-        element={
-          <Layout>
-            <AddDownload />
-          </Layout>
-        }
-      />
-      <Route
-        path="/official-profile"
-        element={
-          <Layout>
-            <OfficialProfile />
+            <EditEvent />
           </Layout>
         }
       />
@@ -161,7 +295,7 @@ const App: FC = () => {
         }
       />
       <Route
-        path="/Manuals"
+        path="/manuals"
         element={
           <Layout>
             <Manuals />
@@ -169,7 +303,75 @@ const App: FC = () => {
         }
       />
       <Route
+        path="/others"
+        element={
+          <Layout>
+            <OthersDownload />
+          </Layout>
+        }
+      />
+      <Route
+        path="/add-download"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AddDownload />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-download"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <EditDownload />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/downloads/:downloadId"
+        element={
+          <Layout>
+            <Downloads />
+          </Layout>
+        }
+      />
+      <Route
+        path="/official-profile"
+        element={
+          <Layout>
+            <OfficialProfile />
+          </Layout>
+        }
+      />
+      <Route
         path="/announcements"
+        element={
+          <Layout>
+            <Announcements />
+          </Layout>
+        }
+      />
+      <Route
+        path="/announcements/annoucementId"
+        element={
+          <Layout>
+            <AnnouncementDetail />
+          </Layout>
+        }
+      />
+      <Route
+        path="/add-announcement"
+        element={
+          <Layout>
+            <AddAnnouncement />
+          </Layout>
+        }
+      />
+      <Route
+        path="/edit-announcement/:announcementId"
         element={
           <Layout>
             <Announcements />
@@ -201,30 +403,6 @@ const App: FC = () => {
         }
       />
       <Route
-        path="/project/:projectId"
-        element={
-          <Layout>
-            <ProjectDetail />
-          </Layout>
-        }
-      />
-      <Route
-        path="/add-project"
-        element={
-          <Layout>
-            <AddProject />
-          </Layout>
-        }
-      />
-      <Route
-        path="/edit-project/:projectId"
-        element={
-          <Layout>
-            <EditProject />
-          </Layout>
-        }
-      />
-      <Route
         path="/blogs"
         element={
           <Layout>
@@ -243,8 +421,18 @@ const App: FC = () => {
       <Route
         path="/add-blog"
         element={
+          <ProtectedRoute>
+            <Layout>
+              <AddBlog />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/term-conditions"
+        element={
           <Layout>
-            <AddBlog />
+            <TermAndConditions />
           </Layout>
         }
       />

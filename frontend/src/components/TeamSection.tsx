@@ -1,6 +1,9 @@
-import jane from "../assets/images/jane.jpg";
-import man from "../assets/images/man.jpg";
-import girl2 from "../assets/images/girl2.avif";
+import dessalegn from "../assets/images/dessalegn.jpg";
+import solomon from "../assets/images/solomon.png";
+import getnet from "../assets/images/Getnet.jpg";
+import adanech from "../assets/images/Adanech.jpg";
+import abenizer from "../assets/images/Abenizer.jpg";
+import nega from "../assets/images/Nega.jpg";
 
 const TeamSection = () => {
   return (
@@ -17,44 +20,102 @@ const TeamSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           <div className="border border-gray-200 rounded-lg p-8 h-full">
             <img
-              src={jane}
-              alt="Jane Doe"
-              className="w-24 h-24 rounded-full mx-auto mb-5"
-            />
-            <h3 className="text-2xl font-bold mb-2 text-green-800">Jane Doe</h3>
-            <p className="text-gray-600 mb-5">Project Manager</p>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              Jane is a passionate project manager with extensive experience in
-              environmental conservation.
-            </p>
-          </div>
-          <div className="border border-gray-200 rounded-lg p-8 h-full">
-            <img
-              src={man}
-              alt="John Doe"
-              className="w-24 h-24 rounded-full mx-auto mb-5 object-scale-down"
-            />
-            <h3 className="text-2xl font-bold mb-2 text-green-800">John Doe</h3>
-            <p className="text-gray-600 mb-5">Communications Specialist</p>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              John is a skilled communications specialist dedicated to spreading
-              awareness about environmental issues.
-            </p>
-          </div>
-          <div className="border border-gray-200 rounded-lg p-8 h-full">
-            <img
-              src={girl2}
-              alt="Michael Johnson"
+              src={dessalegn}
+              alt="Dessalegn Tebratu Nissrane"
               className="w-24 h-24 rounded-full mx-auto mb-5"
             />
             <h3 className="text-2xl font-bold mb-2 text-green-800">
-              Michael Johnson
+              Dessalegn Tebratu Nissrane
             </h3>
-            <p className="text-gray-600 mb-5">Field Researcher</p>
+            <p className="text-gray-600 mb-5">Executive Director</p>
             <p className="text-gray-500 text-sm leading-relaxed">
-              Michael is an experienced field researcher who has conducted
-              numerous studies on local ecosystems.
+              Dessalegn is the executive director of the organization, leading
+              with passion and dedication.
             </p>
+            <p className="text-gray-500 text-sm">
+              Email: dessalegntebratu@gmail.com
+            </p>
+          </div>
+          <div className="border border-gray-200 rounded-lg p-8 h-full">
+            <img
+              src={solomon}
+              alt="Solomon Tadesse Gebrgeorgis"
+              className="w-24 h-24 rounded-full mx-auto mb-5"
+            />
+            <h3 className="text-2xl font-bold mb-2 text-green-800">
+              Solomon Tadesse Gebrgeorgis
+            </h3>
+            <p className="text-gray-600 mb-5">Finance Head</p>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Solomon oversees the financial operations, ensuring transparency
+              and efficiency.
+            </p>
+            <p className="text-gray-500 text-sm">
+              Email: stadesse078@gmail.com
+            </p>
+          </div>
+          <div className="border border-gray-200 rounded-lg p-8 h-full">
+            <img
+              src={getnet}
+              alt="Getnet Fantahun Dibekulu"
+              className="w-24 h-24 rounded-full mx-auto mb-5"
+            />
+            <h3 className="text-2xl font-bold mb-2 text-green-800">
+              Getnet Fantahun Dibekulu
+            </h3>
+            <p className="text-gray-600 mb-5">Senior Project Officer</p>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Getnet is a senior project officer with a wealth of experience in
+              project management and execution.
+            </p>
+          </div>
+          <div className="border border-gray-200 rounded-lg p-8 h-full">
+            <img
+              src={adanech}
+              alt="Adanech Alebachew Tsega"
+              className="w-24 h-24 rounded-full mx-auto mb-5"
+            />
+            <h3 className="text-2xl font-bold mb-2 text-green-800">
+              Adanech Alebachew Tsega
+            </h3>
+            <p className="text-gray-600 mb-5">Casher and Typist</p>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Adanech handles the organization's financial transactions and
+              documentation with precision and care.
+            </p>
+          </div>
+          <div className="border border-gray-200 rounded-lg p-8 h-full">
+            <img
+              src={abenizer}
+              alt="Abenizer Tesfaye Nigusse"
+              className="w-24 h-24 rounded-full mx-auto mb-5"
+            />
+            <h3 className="text-2xl font-bold mb-2 text-green-800">
+              Abenizer Tesfaye Nigusse
+            </h3>
+            <p className="text-gray-600 mb-5">Resource Mobilization Expert</p>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Abenizer is responsible for resource mobilization, ensuring that
+              the organization has the necessary resources to operate
+              effectively.
+            </p>
+            <p className="text-gray-500 text-sm">Email: abenizert@gmail.com</p>
+          </div>
+          <div className="border border-gray-200 rounded-lg p-8 h-full">
+            <img
+              src={nega}
+              alt="Nega Ashagre Semaw"
+              className="w-24 h-24 rounded-full mx-auto mb-5"
+            />
+            <h3 className="text-2xl font-bold mb-2 text-green-800">
+              Nega Ashagre Semaw
+            </h3>
+            <p className="text-gray-600 mb-5">Project Coordinator</p>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Nega coordinates various projects, ensuring they are completed on
+              time and within scope.
+            </p>
+            <p className="text-gray-500 text-sm">Email: negatshay1@gmail.com</p>
           </div>
         </div>
         <div className="mt-12 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">

@@ -1,15 +1,13 @@
+import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import * as apiCall from "../services/apiCall";
+import { signIn, googleSignIn } from "../services/authService";
 import { useAppContext } from "../contexts/AppContext";
-
-export type SignInFormData = {
-  email: string;
-  password: string;
-};
+import { SignInFormData } from "../utils/types";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignIn = () => {
   const { t } = useTranslation();
@@ -17,13 +15,15 @@ const SignIn = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFormData>();
 
-  const mutation = useMutation(apiCall.signIn, {
+  const mutation = useMutation(signIn, {
     onSuccess: async () => {
       showToast({ message: t("loginSuccess"), type: "SUCCESS" });
       await queryClient.invalidateQueries("validateToken");
@@ -39,11 +39,13 @@ const SignIn = () => {
     mutation.mutate(data);
   });
 
-  const handleGoogleLoginSuccess = async (response) => {
+  const handleGoogleLoginSuccess = async (response: any) => {
     try {
-      const googleResponse = await apiCall.googleSignIn({
+      const googleResponse = await googleSignIn({
         credential: response.credential,
       });
+
+      console.log(googleResponse);
       if (googleResponse.success) {
         showToast({ message: t("googleLoginSuccess"), type: "SUCCESS" });
         await queryClient.invalidateQueries("validateToken");
@@ -79,16 +81,22 @@ const SignIn = () => {
             <span className="text-red-500 text-sm">{errors.email.message}</span>
           )}
         </div>
-        <div className="mb-8">
+        <div className="mb-8 relative">
           <label className="block text-gray-700 text-base font-bold mb-2">
             {t("password")}
           </label>
           <input
-            type="password"
-            className="border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type={passwordVisible ? "text" : "password"}
+            className="border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
             placeholder="myPassword"
             {...register("password", { required: t("fieldRequired") })}
           />
+          <button
+            type="button"
+            className="absolute inset-y-0 right-0 pr-3 pt-8 flex items-center text-gray-700"
+            onClick={() => setPasswordVisible(!passwordVisible)}>
+            {passwordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+          </button>
           {errors.password && (
             <span className="text-red-500 text-sm">
               {errors.password.message}

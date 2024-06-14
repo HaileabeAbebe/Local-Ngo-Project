@@ -28,7 +28,7 @@ router.post(
   "/",
   isAuthenticated,
   isAdminOrEditor,
-  upload.fields([{ name: "imageFiles", maxCount: 5 }]),
+  upload.array("imageFiles", 6),
   validateNewsCreation,
   newsController.createNews
 );
@@ -38,7 +38,7 @@ router.put(
   "/:newsId",
   isAuthenticated,
   isAdminOrOwner(News, "newsId"),
-  upload.fields([{ name: "imageFiles", maxCount: 5 }]),
+  upload.array("imageFiles", 6),
   validateNewsUpdate,
   newsController.updateNews
 );

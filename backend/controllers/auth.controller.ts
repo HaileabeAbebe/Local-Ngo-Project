@@ -6,6 +6,44 @@ import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError";
 
+// Sign up
+export const signUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    let user = await User.findOne({ email: req.body.email });
+
+    if (user) {
+      return next(createError(400, "User with this email already exists"));
+    }
+
+    user = new User(req.body);
+    await user.save();
+
+    const token = jwt.sign(
+      { userId: user.id, role: user.role },
+      process.env.JWT_SECRET_KEY as string
+    );
+
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return res.status(200).json({ message: "User registered successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Sign in
 export const signIn = async (
   req: Request,
   res: Response,
@@ -19,20 +57,21 @@ export const signIn = async (
 
   try {
     let user = await User.findOne({ email });
-    if (!user) {
-      return next(createError(400, "Invalid Credentials"));
+    if (!user || !user.password) {
+      return next(createError(400, "Username or Password is incorrect"));
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       {
-        return next(createError(400, "Invalid Credentials"));
+        return next(createError(400, "Username or Password is incorrect"));
       }
     }
 
     const token = jwt.sign(
       { userId: user.id, role: user.role },
-      process.env.JWT_SECRET_KEY as string
+      process.env.JWT_SECRET_KEY as string,
+      { expiresIn: "2w" }
     );
 
     res.cookie("auth_token", token, {
@@ -71,8 +110,38 @@ export const validateToken = (
   }
 };
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// Refresh Token
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
 
+    const newToken = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET_KEY as string,
+      { expiresIn: "2w" }
+    );
+
+    res.cookie("auth_token", newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.json({ message: "Token refreshed successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Google Sign-in
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export const googleSignIn = async (
   req: Request,
   res: Response,
@@ -85,22 +154,33 @@ export const googleSignIn = async (
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+
     const payload = ticket.getPayload();
 
     if (!payload) {
-      return next(createError(401, "Google sign-in failed"));
+      return next(createError(401, "Google sign-in failed: Invalid payload"));
     }
 
     let user = await User.findOne({ email: payload.email });
 
     if (!user) {
-      user = new User({ email: payload.email, username: payload.name });
+      user = new User({
+        email: payload.email,
+        username: payload.name,
+        profilePicture: payload.picture,
+        isGoogleUser: true,
+      });
+      await user.save();
+    } else if (!user.isGoogleUser) {
+      // Update existing user profile picture and isGoogleUser if not already set
+      user.profilePicture = payload.picture;
+      user.isGoogleUser = true;
       await user.save();
     }
-
     const token = jwt.sign(
       { userId: user.id, role: user.role },
-      process.env.JWT_SECRET_KEY as string
+      process.env.JWT_SECRET_KEY as string,
+      { expiresIn: "2w" }
     );
 
     res.cookie("auth_token", token, {
@@ -113,7 +193,12 @@ export const googleSignIn = async (
       success: true,
     });
   } catch (error) {
-    next(createError(401, "Google sign-in failed"));
+    if (error instanceof Error) {
+      // Added type guard
+      next(createError(401, "Google sign-in failed: " + error.message));
+    } else {
+      next(createError(401, "Google sign-in failed"));
+    }
   }
 };
 
@@ -121,9 +206,9 @@ export const googleSignIn = async (
 export const signOut = async (req: Request, res: Response) => {
   res
     .clearCookie("auth_token", {
-      sameSite: "none",
-      secure: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
     })
     .status(200)
-    .send("User has been logged out.");
+    .json({ message: "User has been logged out." });
 };

@@ -107,6 +107,9 @@ const Navigation: React.FC = () => {
                 <Link to="/manuals" className="block py-2 hover:text-green-400">
                   {t("manuals")}
                 </Link>
+                <Link to="/others" className="block py-2 hover:text-green-400">
+                  {t("others")}
+                </Link>
               </div>
             </div>
             <Link

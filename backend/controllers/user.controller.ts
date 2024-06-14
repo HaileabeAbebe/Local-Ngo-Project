@@ -1,45 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { body, validationResult } from "express-validator";
-import User, { IUser } from "../models/user.model";
+import User, { IUser, Role } from "../models/user.model";
 import createError from "../utils/createError";
-
-export const signUp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  try {
-    let user = await User.findOne({ email: req.body.email });
-
-    if (user) {
-      return next(createError(400, "User with this email already exists"));
-    }
-
-    user = new User(req.body);
-    await user.save();
-
-    const token = jwt.sign(
-      { userId: user.id, role: user.role },
-      process.env.JWT_SECRET_KEY as string
-    );
-
-    res.cookie("auth_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-    });
-
-    return res.status(200).json({ message: "User registered successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
 
 export const profile = async (
   req: Request,
@@ -50,21 +11,6 @@ export const profile = async (
 
   if (!user) {
     return next(createError(404, "User not found"));
-  }
-
-  res.json(user);
-};
-
-// Users
-export const fetchUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const user = await User.find();
-
-  if (!user) {
-    return next(createError(404, "Users not found"));
   }
 
   res.json(user);
@@ -101,25 +47,45 @@ export const updateProfile = async (
   }
 };
 
-// export const updateProfile = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const user = await User.findById(req.userId);
+export const fetchUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const users = await User.find(
+      {},
+      "username role email isGoogleUser profilePicture"
+    );
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+};
 
-//   if (!user) {
-//     return next(createError(404, "User not found"));
-//   }
+export const updateUserRole = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = req.params;
+  const { role } = req.body;
 
-//   user.username = req.body.username;
-//   user.email = req.body.email;
-//   user.password = req.body.password;
+  if (!Object.values(Role).includes(role)) {
+    return next(createError(400, "Invalid role"));
+  }
 
-//   try {
-//     await user.save();
-//     res.json({ message: "Profile updated successfully" });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.status(200).json({ message: "User role updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+};

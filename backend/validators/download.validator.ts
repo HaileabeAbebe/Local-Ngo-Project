@@ -15,8 +15,8 @@ export const validateDownloadCreation = [
   body("type")
     .notEmpty()
     .withMessage("Type is required")
-    .isIn(["manual", "strategy"])
-    .withMessage("Type must be either 'manual' or 'strategy'"),
+    .isIn(["manual", "strategy", "others"])
+    .withMessage("Type must be either 'manual', 'strategy' or others"),
   body("accessLevel")
     .notEmpty()
     .withMessage("Access level is required")
@@ -26,6 +26,16 @@ export const validateDownloadCreation = [
     const file = req.file;
     if (!file) {
       throw new Error("File is required");
+    }
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword", // .doc
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    ];
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new Error(
+        "Invalid file type. Only PDF and Word documents are allowed"
+      );
     }
     return true;
   }),
@@ -49,8 +59,8 @@ export const validateDownloadUpdate = [
     .optional()
     .notEmpty()
     .withMessage("Type is required")
-    .isIn(["manual", "strategy"])
-    .withMessage("Type must be either 'manual' or 'strategy'"),
+    .isIn(["manual", "strategy", "others"])
+    .withMessage("Type must be either 'manual', 'strategy'or 'others"),
   body("accessLevel")
     .optional()
     .notEmpty()
@@ -61,8 +71,15 @@ export const validateDownloadUpdate = [
     .optional()
     .custom((value, { req }) => {
       const file = req.file;
-      if (file && !file.mimetype.startsWith("application/")) {
-        throw new Error("Invalid file type. Only documents are allowed");
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword", // .doc
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+      ];
+      if (file && !allowedTypes.includes(file.mimetype)) {
+        throw new Error(
+          "Invalid file type. Only PDF and Word documents are allowed"
+        );
       }
       return true;
     }),

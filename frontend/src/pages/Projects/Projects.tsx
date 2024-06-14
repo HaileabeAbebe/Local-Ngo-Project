@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import ProjectList from "../../components/projects/ProjectList";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/projectService";
 import { useAppContext } from "../../contexts/AppContext";
 import { IProject } from "../../utils/types";
 
@@ -35,10 +35,10 @@ const Projects: React.FC = () => {
             case "desc":
               return b.title.localeCompare(a.title);
             case "recent":
-              if (a.lastUpdated && b.lastUpdated) {
+              if (a.updatedAt && b.updatedAt) {
                 return (
-                  new Date(b.lastUpdated).getTime() -
-                  new Date(a.lastUpdated).getTime()
+                  new Date(b.updatedAt).getTime() -
+                  new Date(a.updatedAt).getTime()
                 );
               } else {
                 return 0;

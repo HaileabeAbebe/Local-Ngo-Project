@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
-import { IProject } from "../../components/projects/ProjectCard";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/projectService";
 import {
   FiEdit2,
   FiCalendar,
@@ -11,14 +10,19 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import { useAppContext } from "../../contexts/AppContext";
+import { IProject } from "../../utils/types";
 
 const ProjectDetail: React.FC = () => {
-  const { projectId } = useParams() as { projectId: string };
+  const { projectId } = useParams<{ projectId: string }>();
   const { isLoggedIn, user } = useAppContext();
   const navigate = useNavigate();
 
   // Fetch project data
-  const { data: projectData } = useQuery<IProject>(
+  const {
+    data: projectData,
+    error,
+    isLoading,
+  } = useQuery<IProject>(
     ["fetchProject", projectId],
     () =>
       projectId ? apiCall.fetchProjectById(projectId) : Promise.reject("No ID"),
@@ -41,22 +45,33 @@ const ProjectDetail: React.FC = () => {
     },
   });
 
-  // Handle project deletion
   const handleDelete = () => {
-    mutation.mutate(projectId);
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      if (projectId) {
+        mutation.mutate(projectId);
+      }
+    }
   };
 
   // Main image state
   const [mainImage, setMainImage] = useState<string | undefined>();
 
   useEffect(() => {
-    if (projectData?.imageUrls.length) {
+    if (projectData?.imageUrls?.length) {
       setMainImage(projectData.imageUrls[0]);
     }
   }, [projectData]);
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading project data</div>;
+  }
+
   if (!projectData) {
-    return <span>Loading...</span>;
+    return <div>No project data available</div>;
   }
 
   return (
@@ -67,7 +82,8 @@ const ProjectDetail: React.FC = () => {
         </h1>
         {isLoggedIn &&
           user &&
-          (user._id === projectData.createdBy._id || user.role === "admin") && (
+          (user._id === projectData.createdBy?._id ||
+            user.role === "admin") && (
             <div className="flex items-center space-x-4">
               <Link
                 to={`/edit-project/${projectData._id}`}
@@ -119,22 +135,24 @@ const ProjectDetail: React.FC = () => {
           />
         ))}
       </div>
-      <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
-        <h2 className="text-xl font-bold text-green-800 mb-4">Documents</h2>
-        <ul className="list-disc list-inside">
-          {projectData.docUrls.map((url, index) => (
-            <li key={index} className="mb-2">
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                {`Document ${index + 1}`}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {projectData.docUrls.length > 0 && (
+        <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+          <h2 className="text-xl font-bold text-green-800 mb-4">Documents</h2>
+          <ul className="list-disc list-inside">
+            {projectData.docUrls.map((url, index) => (
+              <li key={index} className="mb-2">
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline">
+                  {`Document ${index + 1}`}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

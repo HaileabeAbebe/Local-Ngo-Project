@@ -1,12 +1,14 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
 import createError from "../utils/createError";
+import User from "../models/user.model";
 
 declare global {
   namespace Express {
     interface Request {
       userId: string;
       role: string;
+      token: string;
     }
   }
 }
@@ -17,10 +19,8 @@ export const isAuthenticated = async (
   next: NextFunction
 ) => {
   try {
-    // Get the token from the cookies
     const token = req.cookies.auth_token;
 
-    // Verify the token
     if (!token) {
       return next(createError(401, "Please authenticate"));
     }
@@ -30,9 +30,20 @@ export const isAuthenticated = async (
       role: string;
     };
 
-    // Store the user information in the req object
     req.userId = decoded.userId;
     req.role = decoded.role;
+    req.token = token;
+
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return next(createError(404, "User not found"));
+    }
+
+    if (user.role !== req.role) {
+      return next(
+        createError(403, "User role has changed, please refresh your token")
+      );
+    }
 
     next();
   } catch (error) {
@@ -42,14 +53,14 @@ export const isAuthenticated = async (
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (req.role !== "admin") {
-    return next(createError(403, "User is not authorized"));
+    return next(createError(403, "User is not authorized not admin"));
   }
   next();
 };
 
 export const isEditor = (req: Request, res: Response, next: NextFunction) => {
   if (req.role !== "editor") {
-    return next(createError(403, "User is not authorized"));
+    return next(createError(403, "User is not authorized not editor"));
   }
   next();
 };
@@ -61,7 +72,9 @@ export const isAdminOrEditor = (
 ) => {
   if (req.role !== "admin" && req.role !== "editor") {
     // return next(createError(403, "User is not authorized"));
-    return res.status(403).json({ message: "User is not authorized" });
+    return res
+      .status(403)
+      .json({ message: "User is not authorized nethier admin nor editor" });
   }
   next();
 };
@@ -76,7 +89,7 @@ export const isOwner =
 
       // Check if the current user is the owner of the item
       if (item.createdBy.toString() !== req.userId) {
-        return next(createError(403, "User is not authorized"));
+        return next(createError(403, "User is not authorized not owner"));
       }
 
       next();

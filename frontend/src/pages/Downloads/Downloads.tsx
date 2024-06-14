@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import DownloadList from "../../components/downloads/DownloadList";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/downloadService";
 import { useAppContext } from "../../contexts/AppContext";
 import { IDownload } from "../../utils/types";
 
@@ -46,9 +46,9 @@ const Downloads: React.FC = () => {
     : [];
 
   return (
-    <div className="bg-white py-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-green-800">Downloads</h1>
+    <div className="bg-white py-6 px-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-green-800">Downloads</h1>
         {isLoggedIn &&
           user &&
           (user.role === "editor" || user.role === "admin") && (
@@ -65,7 +65,7 @@ const Downloads: React.FC = () => {
           placeholder="Search downloads..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="p-2 border w-full"
+          className="p-2 border w-full rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
         />
       </div>
       <div className="mb-4">
@@ -75,7 +75,7 @@ const Downloads: React.FC = () => {
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
             setSort(e.target.value)
           }
-          className="p-2 border">
+          className="p-2 border w-full rounded-md focus:outline-none focus:ring-2 focus:ring-green-800">
           <option value="asc">Sort by title (A-Z)</option>
           <option value="desc">Sort by title (Z-A)</option>
           <option value="recent">Sort by recent</option>

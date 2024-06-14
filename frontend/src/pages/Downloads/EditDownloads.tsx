@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/downloadService";
 import { IDownload } from "../../utils/types";
 
 const EditDownload: React.FC = () => {

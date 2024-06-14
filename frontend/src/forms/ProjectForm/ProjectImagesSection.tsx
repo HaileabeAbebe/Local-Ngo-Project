@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { ProjectFormData } from "./ManageProjectForm";
+import { ProjectFormData } from "../../utils/types";
 
 // This component is responsible for handling the project images section of the form
 const ProjectImagesSection = () => {

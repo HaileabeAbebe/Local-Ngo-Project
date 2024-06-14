@@ -3,19 +3,7 @@ import ProjectDetailsSection from "./ProjectDetailsSection";
 import ProjectImagesSection from "./ProjectImagesSection";
 import { useEffect } from "react";
 import ProjectDocumentsSection from "../../components/ProjectDocumentsSection";
-
-export type ProjectFormData = {
-  _id: string;
-  title: string;
-  description: string;
-  status: string;
-  startDate: Date;
-  endDate: Date;
-  imageFiles: FileList;
-  imageUrls: string[];
-  docFiles: FileList;
-  docUrls: string[];
-};
+import { ProjectFormData } from "../../utils/types";
 
 type Props = {
   project?: ProjectFormData;
@@ -46,15 +34,17 @@ const ManageProjectForm = ({ onSave, isLoading, project }: Props) => {
     formData.append("startDate", formDataJson.startDate.toString());
     formData.append("endDate", formDataJson.endDate.toString());
 
-    formDataJson.imageUrls.forEach((url, index) => {
-      formData.append(`imageUrls`, url);
-    });
+    if (formDataJson.imageUrls) {
+      formDataJson.imageUrls.forEach((url, index) => {
+        formData.append(`imageUrls[${index}]`, url);
+      });
+    }
 
-    Array.from(formDataJson.imageFiles).forEach((imageFile) => {
+    Array.from(formDataJson.imageFiles || []).forEach((imageFile) => {
       formData.append(`imageFiles`, imageFile);
     });
 
-    Array.from(formDataJson.docFiles).forEach((docFile) => {
+    Array.from(formDataJson.docFiles || []).forEach((docFile) => {
       formData.append(`docFiles`, docFile);
     });
 

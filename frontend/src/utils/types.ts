@@ -1,18 +1,32 @@
+// User
 export enum Role {
   Admin = "admin",
   Editor = "editor",
   User = "user",
 }
 
-// Define the User interface
 export interface IUser {
   _id: string;
   username: string;
   password: string;
   role: Role;
   email: string;
+  isGoogleUser: boolean;
+  profilePicture?: string;
 }
+export type RegisterFormData = {
+  username: string;
+  password: string;
+  confirmPassword: string;
+  email: string;
+};
 
+export type SignInFormData = {
+  email: string;
+  password: string;
+};
+
+// Project
 export interface IProject {
   _id: string;
   title: string;
@@ -24,8 +38,24 @@ export interface IProject {
   docUrls: string[];
   createdBy: IUser;
   isApproved: boolean;
-  lastUpdated: Date;
+  updatedAt: Date;
+  createdAt: Date;
 }
+
+export type ProjectFormData = {
+  _id: string;
+  title: string;
+  description: string;
+  status: string;
+  startDate: Date;
+  endDate: Date;
+  imageFiles: FileList;
+  imageUrls: string[];
+  docFiles: FileList;
+  docUrls: string[];
+  updatedAt?: string;
+  createdAt?: string;
+};
 
 // Blog post
 export interface IBlog {
@@ -46,6 +76,8 @@ export interface BlogFormData {
   imageFiles: FileList;
   imageUrls: string[];
 }
+
+// News
 export interface INews {
   _id: string;
   title: string;
@@ -57,13 +89,31 @@ export interface INews {
   createdAt: Date;
 }
 
+// Download
 export interface IDownload {
   _id: string;
   title: string;
   category: string;
-  type: "manual" | "strategy";
-  accessLevel: "public" | "protected";
+  type: "manual" | "strategy" | "other";
+  accessLevel: "public" | "protected" | "private";
   fileUrl: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IEvent {
+  _id: string;
+  title: string;
+  description: string;
+  date: Date;
+  createdBy: IUser;
+  imageUrls: string[];
+  updatedAt?: Date;
+}
+
+export interface IAnnouncement {
+  _id: string;
+  title: string;
+  content: string;
+  createdBy: string;
 }

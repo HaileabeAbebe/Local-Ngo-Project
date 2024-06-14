@@ -1,4 +1,3 @@
-// AppContextProvider.js
 import {
   createContext,
   useContext,
@@ -8,7 +7,8 @@ import {
 } from "react";
 import Toast from "../components/Toast";
 import { useQuery } from "react-query";
-import * as apiCall from "../services/apiCall";
+import * as authService from "../services/authService";
+import * as userService from "../services/userService";
 import { IUser } from "../utils/types";
 import { useNavigate } from "react-router-dom";
 
@@ -40,7 +40,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   // Query to validate token
   const { isError: tokenError } = useQuery(
     "validateToken",
-    apiCall.validateToken,
+    authService.validateToken,
     {
       retry: false,
     }
@@ -59,7 +59,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     data: user,
     isError: userError,
     refetch,
-  } = useQuery("user", apiCall.fetchProfile, {
+  } = useQuery("user", userService.fetchProfile, {
     enabled: !tokenError, // fetch user profile if logged in successfully
     retry: false,
   });
@@ -73,7 +73,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   // Function to sign out
   const signOut = async () => {
     try {
-      await apiCall.signOut();
+      await authService.signOut();
       setIsLoggedIn(false); // Update logged in status on sign out
       navigate("/");
     } catch (error) {

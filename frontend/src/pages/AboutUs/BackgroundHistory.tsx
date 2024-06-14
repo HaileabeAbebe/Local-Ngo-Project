@@ -1,7 +1,7 @@
 const BackgroundHistory = () => {
   return (
     <section className="bg-white text-gray-800 py-16">
-      <div className="px-4 sm:px-6 lg:px-40">
+      <div>
         <h2 className="text-5xl font-bold mb-8 text-center text-green-800">
           Our Background and History
         </h2>

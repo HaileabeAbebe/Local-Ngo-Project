@@ -1,5 +1,67 @@
 import { Link } from "react-router-dom";
-import children from "../assets/images/children.jpg";
+import { Bar, Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  BarController,
+  PieController,
+  Tooltip,
+  Legend,
+  Title,
+} from "chart.js";
+
+// Register the required components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  BarController,
+  PieController,
+  Tooltip,
+  Legend,
+  Title
+);
+
+const projectDataByRegion = {
+  labels: ["Addis Ababa", "Oromia", "Amhara", "Tigray", "Sidama"],
+  datasets: [
+    {
+      label: "Number of Projects",
+      backgroundColor: "rgba(54, 162, 235, 0.6)",
+      borderColor: "rgba(54, 162, 235, 1)",
+      borderWidth: 1,
+      hoverBackgroundColor: "rgba(54, 162, 235, 0.8)",
+      hoverBorderColor: "rgba(54, 162, 235, 1)",
+      data: [15, 25, 20, 10, 8],
+    },
+  ],
+};
+
+const workDistributionData = {
+  labels: ["Vegetation", "Women & Children", "Education", "Sanitation"],
+  datasets: [
+    {
+      label: "Work Distribution",
+      backgroundColor: [
+        "rgba(75, 192, 192, 0.6)",
+        "rgba(255, 159, 64, 0.6)",
+        "rgba(255, 205, 86, 0.6)",
+        "rgba(153, 102, 255, 0.6)",
+      ],
+      hoverBackgroundColor: [
+        "rgba(75, 192, 192, 0.8)",
+        "rgba(255, 159, 64, 0.8)",
+        "rgba(255, 205, 86, 0.8)",
+        "rgba(153, 102, 255, 0.8)",
+      ],
+      data: [35, 25, 20, 20],
+    },
+  ],
+};
 
 const FeaturedSection = () => {
   return (
@@ -33,12 +95,21 @@ const FeaturedSection = () => {
             </Link>
           </div>
         </div>
-        <div className="w-full md:w-1/2">
-          <img
-            src={children}
-            alt="Children playing"
-            className="rounded-xl mx-auto object-cover opacity-95"
-          />
+        <div className="w-full md:w-1/2 flex flex-col space-y-8">
+          <div className="p-4 border rounded-lg shadow h-80">
+            <h2 className="text-lg font-semibold mb-2">Projects by Region</h2>
+            <Bar
+              data={projectDataByRegion}
+              options={{ maintainAspectRatio: false }}
+            />
+          </div>
+          <div className="p-4 border rounded-lg shadow h-80">
+            <h2 className="text-lg font-semibold mb-2">Work Distribution</h2>
+            <Pie
+              data={workDistributionData}
+              options={{ maintainAspectRatio: false }}
+            />
+          </div>
         </div>
       </div>
     </section>

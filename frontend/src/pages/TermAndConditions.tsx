@@ -9,7 +9,7 @@ const TermsAndConditions = () => {
           Please read these terms and conditions carefully.
         </p>
       </div>
-      <div className="space-y-12 px-4 sm:px-8 lg:px-16">
+      <div className="space-y-12 px-4 sm:px-8 ">
         <div>
           <h3 className="text-3xl font-semibold mb-4 text-orange-500">
             Introduction

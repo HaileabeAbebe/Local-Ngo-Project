@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/downloadService";
 import { useAppContext } from "../../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 import ManageDownloadForm from "../../forms/DownloadForm/ManageDownloadForm";
@@ -11,7 +11,7 @@ const AddDownload = () => {
   const { mutate, isLoading } = useMutation(apiCall.createDownload, {
     onSuccess: () => {
       showToast({ message: "Download created successfully!", type: "SUCCESS" });
-      navigate("/downloads");
+      navigate("/strategies");
     },
     onError: async (error) => {
       if (error instanceof Response) {

@@ -15,7 +15,7 @@ import Download from "../models/download.model";
 import {
   validateDownloadCreation,
   validateDownloadUpdate,
-} from "./../validators/download.validator";
+} from "../validators/download.validator";
 
 const router = express.Router();
 const upload = multer();
@@ -33,11 +33,14 @@ router.post(
 // Get all downloads
 router.get("/", isAuthenticated, getDownloads);
 
+// Get download by ID
+router.get("/:downloadId", isAuthenticated, getDownloads);
+
 // Update a download
 router.put(
   "/:id",
   isAuthenticated,
-  isAdminOrOwner(Download, "id"),
+  isAdminOrOwner(Download, "downloadId"),
   upload.single("file"),
   validateDownloadUpdate,
   updateDownload
@@ -45,9 +48,9 @@ router.put(
 
 // Delete a download
 router.delete(
-  "/:id",
+  "/:downloadId",
   isAuthenticated,
-  isAdminOrOwner(Download, "id"),
+  isAdminOrOwner(Download, "downloadId"),
   deleteDownload
 );
 

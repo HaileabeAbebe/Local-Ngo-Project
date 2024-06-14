@@ -50,27 +50,6 @@ const NewsDetailsSection = () => {
           <p className="text-red-500">{errors.content.message}</p>
         )}
       </div>
-      {/* <div className="mb-4">
-        <label htmlFor="author" className="block text-gray-700 font-bold mb-2">
-          Author:
-        </label>
-        <input
-          type="text"
-          id="author"
-          placeholder="Enter author name"
-          {...register("author", {
-            required: "Author is required",
-            minLength: {
-              value: 3,
-              message: "Author name should be at least 3 characters",
-            },
-          })}
-          className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
-        />
-        {errors.author && (
-          <p className="text-red-500">{errors.author.message}</p>
-        )}
-      </div> */}
     </div>
   );
 };

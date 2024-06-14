@@ -1,6 +1,7 @@
 import profilePic1 from "../../assets/images/jane.jpg";
 import profilePic2 from "../../assets/images/man.jpg";
 import profilePic3 from "../../assets/images/girl2.avif";
+import structure from "../../assets/images/CStructure.png";
 
 const OrganizationalStructure = () => {
   return (
@@ -61,6 +62,9 @@ const OrganizationalStructure = () => {
             numerous studies on local ecosystems.
           </p>
         </div>
+      </div>
+      <div className="mt-12 flex justify-center">
+        <img src={structure} alt="" />
       </div>
     </section>
   );

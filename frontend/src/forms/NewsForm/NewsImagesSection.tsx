@@ -80,7 +80,7 @@ const NewsImagesSection = () => {
               }
 
               if (totalLength > 6) {
-                return "Total number of images cannot be more than 5";
+                return "Total number of images cannot be more than 6";
               }
 
               return true;

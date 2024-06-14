@@ -12,15 +12,11 @@ export const validateNewsCreation = [
     .isLength({ min: 15, max: 5000 })
     .withMessage("Content should be between 15 and 5000 characters"),
   body("imageFiles").custom((value, { req }) => {
-    if (
-      req.files &&
-      req.files["imageFiles"] &&
-      req.files["imageFiles"].length >= 1 &&
-      req.files["imageFiles"].length <= 5
-    ) {
-      return true;
+    const imageFiles = req.files?.imageFiles;
+    if (imageFiles && (imageFiles.length < 1 || imageFiles.length > 6)) {
+      throw new Error("There should be at least 1 and at most 6 images");
     }
-    throw new Error("There should be at least 1 and at most 5 images");
+    return true;
   }),
 ];
 

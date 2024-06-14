@@ -7,21 +7,7 @@ import {
   FiCalendar,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { IUser } from "../../utils/types";
-
-export interface IProject {
-  _id: string;
-  title: string;
-  description: string;
-  status: string; // 'ongoing', 'finished'
-  startDate: Date;
-  endDate: Date;
-  imageUrls: string[];
-  docUrls: string[];
-  createdBy: IUser;
-  isApproved: boolean;
-  lastUpdated?: Date;
-}
+import { IProject } from "../../utils/types";
 
 type Props = {
   project: IProject;

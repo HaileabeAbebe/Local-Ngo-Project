@@ -1,6 +1,6 @@
 // AddNews.js
 import { useMutation } from "react-query";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/newsService";
 import { useAppContext } from "../../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 import ManageNewsForm from "../../forms/NewsForm/ManageNewsForm";

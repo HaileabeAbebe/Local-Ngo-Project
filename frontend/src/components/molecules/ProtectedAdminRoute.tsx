@@ -1,0 +1,17 @@
+import { Navigate, useLocation } from "react-router-dom";
+import { useAppContext } from "../../contexts/AppContext";
+import { ReactNode } from "react";
+
+const ProtectedAdminRoute = ({ children }: { children: ReactNode }) => {
+  const { user } = useAppContext(); // get the user from context
+  const location = useLocation();
+
+  // If the user is not logged in or not an admin, redirect to home page
+  if (!user || user.role !== "admin") {
+    return <Navigate to="/" state={{ from: location }} />;
+  }
+
+  // If the user is an admin, render the children components
+  return children;
+};
+export default ProtectedAdminRoute;

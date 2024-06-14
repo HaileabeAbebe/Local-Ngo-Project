@@ -26,7 +26,7 @@ export const createDownload = async (
       category,
       type,
       accessLevel,
-      fileUrl: uploadResponse.url,
+      fileUrl: uploadResponse.secure_url as string,
       createdBy: req.userId,
     });
 
@@ -37,14 +37,28 @@ export const createDownload = async (
   }
 };
 
-// Get all downloads
 export const getDownloads = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const downloads = await Download.find().populate(
+    const { role } = req;
+
+    let query = {};
+
+    if (role === "admin") {
+      // Admin can access all downloads
+      query = {};
+    } else if (role === "editor") {
+      // Editors can access public and protected downloads
+      query = { accessLevel: { $in: ["public", "protected"] } };
+    } else {
+      // Regular users can only access public downloads
+      query = { accessLevel: "public" };
+    }
+
+    const downloads = await Download.find(query).populate(
       "createdBy",
       "username email"
     );
@@ -78,7 +92,7 @@ export const updateDownload = async (
       const b64 = Buffer.from(file.buffer).toString("base64");
       const dataURI = `data:${file.mimetype};base64,${b64}`;
       const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
-      download.fileUrl = uploadResponse.url;
+      download.fileUrl = uploadResponse.secure_url as string;
     }
 
     await download.save();
@@ -95,7 +109,7 @@ export const deleteDownload = async (
   next: NextFunction
 ) => {
   try {
-    const download = await Download.findByIdAndDelete(req.params.id);
+    const download = await Download.findByIdAndDelete(req.params.downloadId);
     if (!download) {
       return next(createError(404, "Download not found"));
     }

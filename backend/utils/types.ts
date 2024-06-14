@@ -21,7 +21,6 @@ export interface IProject {
   docUrls: string[];
   createdBy: string;
   isApproved: boolean;
-  lastUpdated: Date;
 }
 
 export interface INews {
@@ -30,4 +29,28 @@ export interface INews {
   date: Date;
   createdBy: string;
   imageUrls: string[];
+}
+
+export interface IDownload {
+  title: string;
+  category: string;
+  type: "manual" | "strategy" | "other";
+  accessLevel: "public" | "protected" | "private";
+  fileUrl: string;
+  createdBy: string;
+  createdAt: string;
+}
+
+export interface IEvent {
+  title: string;
+  description: string;
+  date: Date;
+  createdBy: string;
+  imageUrls: string[];
+}
+
+export interface IAnnouncement {
+  title: string;
+  content: string;
+  createdBy: string;
 }

@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import * as apiCall from "../../services/apiCall";
+import * as apiCall from "../../services/projectService";
 import { useAppContext } from "../../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 import ManageProjectForm from "../../forms/ProjectForm/ManageProjectForm";

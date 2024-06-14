@@ -1,5 +1,5 @@
 import { FC } from "react";
-import newsBackground from "../assets/images/jungle2.jpg";
+import newsBackground from "../assets/images/farmer3.jpg";
 
 const NewsLetterSection: FC = () => {
   return (
@@ -8,7 +8,7 @@ const NewsLetterSection: FC = () => {
         backgroundImage: `url(${newsBackground})`,
       }}
       className="relative bg-cover bg-center text-white py-28">
-      <div className="absolute inset-0 bg-black opacity-60"></div>
+      <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-40 text-center">
         <h2 className="text-5xl font-bold mb-6">Subscribe to Our Newsletter</h2>
         <p className="mb-8 text-lg">
