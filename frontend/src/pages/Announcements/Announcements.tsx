@@ -31,7 +31,7 @@ const Announcements: React.FC = () => {
         )
         .filter((announcement) => {
           if (activeTab === "all") return true;
-          return announcement.category === activeTab;
+          return announcement.title === activeTab;
         })
         .sort((a, b) => {
           switch (sort) {

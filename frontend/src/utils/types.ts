@@ -108,12 +108,27 @@ export interface IEvent {
   date: Date;
   createdBy: IUser;
   imageUrls: string[];
-  updatedAt?: Date;
+  imageFiles: FileList;
+  updatedAt: Date;
+  createdAt: Date;
 }
+
+export type EventFormData = {
+  _id: string;
+  title: string;
+  description: string;
+  date: Date;
+  createdBy: IUser;
+  imageFiles: FileList;
+  imageUrls: string[];
+};
 
 export interface IAnnouncement {
   _id: string;
   title: string;
   content: string;
-  createdBy: string;
+  createdBy: IUser;
+  username: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

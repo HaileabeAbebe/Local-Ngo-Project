@@ -31,7 +31,7 @@ const EditAnnouncement = () => {
         const err = await error.json();
         showToast({ message: err.message, type: "ERROR" });
       } else {
-        showToast({ message: error.message, type: "ERROR" });
+        console.log(error);
       }
     },
   });

@@ -2,16 +2,7 @@ import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import EventDetailsSection from "./EventDetailsSection";
 import EventImagesSection from "./EventImagesSection";
-
-export type EventFormData = {
-  _id: string;
-  title: string;
-  description: string;
-  date: string;
-  createdBy: string;
-  imageFiles: FileList;
-  imageUrls: string[];
-};
+import { EventFormData } from "../../utils/types";
 
 type Props = {
   event?: EventFormData;
@@ -36,7 +27,7 @@ const ManageEventForm = ({ onSave, isLoading, event }: Props) => {
     }
     formData.append("title", formDataJson.title);
     formData.append("description", formDataJson.description);
-    formData.append("date", formDataJson.date);
+    formData.append("date", formDataJson.date.toISOString());
 
     Array.from(formDataJson.imageFiles).forEach((imageFile) => {
       formData.append(`imageFiles`, imageFile);

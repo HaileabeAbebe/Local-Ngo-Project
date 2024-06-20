@@ -55,7 +55,7 @@ const SignIn = () => {
         throw new Error(t("googleLoginFailed"));
       }
     } catch (error) {
-      showToast({ message: error.message, type: "ERROR" });
+      console.log(error);
     }
   };
 

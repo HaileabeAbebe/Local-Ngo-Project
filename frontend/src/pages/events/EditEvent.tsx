@@ -21,14 +21,14 @@ const EditEvent = () => {
     onSuccess: () => {
       showToast({ message: "Event updated successfully", type: "SUCCESS" });
       refetch();
-      navigate(`/events/${event._id}`);
+      navigate(`/events/${event?._id}`);
     },
     onError: async (error) => {
       if (error instanceof Response) {
         const err = await error.json();
         showToast({ message: err.message, type: "ERROR" });
       } else {
-        showToast({ message: error.message, type: "ERROR" });
+        console.log(error);
       }
     },
   });

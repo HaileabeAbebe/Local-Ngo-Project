@@ -1,11 +1,11 @@
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect, useRef, RefObject } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../contexts/AppContext";
 
 const Profile: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAppContext();
-  const profileRef = useRef(null);
+  const profileRef: RefObject<HTMLElement | null> = useRef(null);
   const navigate = useNavigate();
 
   const toggleOpen = () => setIsOpen(!isOpen);
@@ -43,7 +43,9 @@ const Profile: FC = () => {
   };
 
   return (
-    <div className="relative z-20" ref={profileRef}>
+    <div
+      className="relative z-20"
+      ref={profileRef as RefObject<HTMLDivElement>}>
       <button
         type="button"
         title="profile"

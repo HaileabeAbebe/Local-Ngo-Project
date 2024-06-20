@@ -12,7 +12,7 @@ const ProjectDetailsSection = () => {
   const maxFutureDate = new Date();
   maxFutureDate.setFullYear(maxFutureDate.getFullYear() + 5);
 
-  const formatDate = (date: Date) => date.toISOString().split("T")[0];
+  // const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">

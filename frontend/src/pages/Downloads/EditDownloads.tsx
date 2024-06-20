@@ -5,11 +5,11 @@ import * as apiCall from "../../services/downloadService";
 import { IDownload } from "../../utils/types";
 
 const EditDownload: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>(); // Ensure id is always a string
   const navigate = useNavigate();
   const { data: download, isLoading } = useQuery<IDownload>(
     ["download", id],
-    () => apiCall.fetchDownloadById(id)
+    () => apiCall.fetchDownloadById(id!)
   );
 
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ const EditDownload: React.FC = () => {
     category: "",
     type: "manual",
     accessLevel: "public",
-    file: null,
+    file: null as File | null,
   });
 
   useEffect(() => {
@@ -32,11 +32,15 @@ const EditDownload: React.FC = () => {
     }
   }, [download]);
 
-  const mutation = useMutation(apiCall.updateDownload, {
-    onSuccess: () => {
-      navigate("/downloads");
-    },
-  });
+  const mutation = useMutation(
+    ({ id, data }: { id: string; data: FormData }) =>
+      apiCall.updateDownload(id, data),
+    {
+      onSuccess: () => {
+        navigate("/downloads");
+      },
+    }
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +52,7 @@ const EditDownload: React.FC = () => {
     if (formData.file) {
       formDataToSubmit.append("file", formData.file);
     }
-    mutation.mutate({ id, data: formDataToSubmit });
+    mutation.mutate({ id: id!, data: formDataToSubmit });
   };
 
   if (isLoading) {
@@ -61,7 +65,8 @@ const EditDownload: React.FC = () => {
         <label>Title</label>
         <input
           type="text"
-          title="title"
+          name="title"
+          title="Enter the title"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
         />
@@ -70,7 +75,8 @@ const EditDownload: React.FC = () => {
         <label>Category</label>
         <input
           type="text"
-          title="category"
+          name="category"
+          title="Enter the title"
           value={formData.category}
           onChange={(e) =>
             setFormData({ ...formData, category: e.target.value })
@@ -80,7 +86,8 @@ const EditDownload: React.FC = () => {
       <div>
         <label>Type</label>
         <select
-          title="type"
+          name="type"
+          title="Select the type"
           value={formData.type}
           onChange={(e) => setFormData({ ...formData, type: e.target.value })}>
           <option value="manual">Manual</option>
@@ -90,8 +97,9 @@ const EditDownload: React.FC = () => {
       <div>
         <label>Access Level</label>
         <select
-          title="access Level"
+          name="access Level"
           value={formData.accessLevel}
+          title={"Select the access level"}
           onChange={(e) =>
             setFormData({ ...formData, accessLevel: e.target.value })
           }>
@@ -103,9 +111,12 @@ const EditDownload: React.FC = () => {
         <label>File</label>
         <input
           type="file"
-          onChange={(e) =>
-            setFormData({ ...formData, file: e.target.files[0] })
-          }
+          placeholder="file"
+          onChange={(e) => {
+            if (e.target.files) {
+              setFormData({ ...formData, file: e.target.files[0] });
+            }
+          }}
         />
       </div>
       <button type="submit">Update Download</button>

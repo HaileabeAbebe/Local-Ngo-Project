@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { EventFormData } from "./ManageEventForm";
+import { EventFormData } from "../../utils/types";
 
 const EventDetailsSection = () => {
   const {

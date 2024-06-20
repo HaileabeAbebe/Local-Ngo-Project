@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { ProjectFormData } from "../forms/ProjectForm/ManageProjectForm";
+import { ProjectFormData } from "../utils/types";
 
 const ProjectDocumentsSection = () => {
   const {

@@ -1,11 +1,12 @@
 import { FC, useEffect, useState, useRef } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { INews } from "../models/newsModel";
 import { fetchNews } from "../services/newsService";
-import { Splide as SplideComponent, SplideSlide } from "@splidejs/react-splide";
-import "@splidejs/splide/dist/css/themes/splide-default.min.css";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { motion, AnimatePresence } from "framer-motion";
+import { INews } from "../utils/types";
 
 const HeroSection: FC = () => {
   const {
@@ -14,15 +15,15 @@ const HeroSection: FC = () => {
     isError,
   } = useQuery<INews[]>("news", fetchNews);
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
-  const splideRef = useRef<SplideComponent | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const sliderRef = useRef<Slider | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading && !isError && news.length > 0) {
       intervalRef.current = setInterval(() => {
-        if (splideRef.current) {
-          splideRef.current.go("+1"); // Go to the next slide
+        if (sliderRef.current) {
+          sliderRef.current.slickNext(); // Go to the next slide
         }
       }, 4000);
     }
@@ -36,22 +37,22 @@ const HeroSection: FC = () => {
 
   const handleNewsClick = (index: number) => {
     setCurrentNewsIndex(index);
-    if (splideRef.current) {
-      splideRef.current.go(index); // Go to the clicked slide
+    if (sliderRef.current) {
+      sliderRef.current.slickGoTo(index); // Go to the clicked slide
     }
     // Clear and restart the interval after user interaction
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = setInterval(() => {
-        if (splideRef.current) {
-          splideRef.current.go("+1"); // Go to the next slide
+        if (sliderRef.current) {
+          sliderRef.current.slickNext(); // Go to the next slide
         }
       }, 4000);
     }
   };
 
-  const handleSlideChange = (splide: any) => {
-    setCurrentNewsIndex(splide.index);
+  const handleSlideChange = (index: number) => {
+    setCurrentNewsIndex(index);
   };
 
   const latestNews = news.slice(0, 3);
@@ -77,18 +78,20 @@ const HeroSection: FC = () => {
     );
   }
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 1200,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: false,
+    afterChange: handleSlideChange,
+  };
+
   return (
     <section className="relative text-white bg-gray-100">
       {latestNews.length > 0 && (
-        <SplideComponent
-          options={{
-            type: "loop",
-            autoplay: false,
-            speed: 1200,
-            pauseOnHover: false,
-          }}
-          ref={splideRef}
-          onMoved={handleSlideChange}>
+        <Slider {...settings} ref={sliderRef}>
           {latestNews.map((newsItem, index) => {
             const isHorizontal = index % 2 === 1;
             const initialAnimation = isHorizontal
@@ -99,7 +102,7 @@ const HeroSection: FC = () => {
               : { opacity: 1, y: 0 };
 
             return (
-              <SplideSlide key={newsItem._id}>
+              <div key={newsItem._id}>
                 <div
                   className="relative flex items-center sm:justify-center md:justify-start h-[75vh] bg-center bg-cover sm:pl-0 md:pl-10 lg:pl-20 "
                   style={{ backgroundImage: `url(${newsItem.imageUrls[0]})` }}
@@ -144,10 +147,10 @@ const HeroSection: FC = () => {
                     )}
                   </AnimatePresence>
                 </div>
-              </SplideSlide>
+              </div>
             );
           })}
-        </SplideComponent>
+        </Slider>
       )}
 
       {/* Static "Latest News" Box */}

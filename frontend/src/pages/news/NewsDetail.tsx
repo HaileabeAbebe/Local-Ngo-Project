@@ -60,7 +60,7 @@ const NewsDetail: React.FC = () => {
             className="w-full object-cover h-[40vh] md:h-[50vh] lg:h-[60vh] rounded-lg shadow-md"
           />
           <div className="grid grid-cols-4 gap-2 mt-4">
-            {newsData.imageUrls.map((url, index) => (
+            {newsData.imageUrls.map((url: string, index: number) => (
               <img
                 key={index}
                 src={url}

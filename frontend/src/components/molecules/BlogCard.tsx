@@ -23,11 +23,11 @@ const BlogCard: React.FC<Props> = ({ blog }) => {
         <FiUser className="mr-2" />
         createdBy: {blog.createdBy}
       </div>
-      {blog.imageURL && (
+      {blog.imageURLs && (
         <div className="mt-6">
           <img
             className="object-cover w-full h-64 transition-transform duration-500 ease-in-out transform hover:scale-105"
-            src={blog.imageURL}
+            src={blog.imageURLs[0]}
             alt={blog.title}
           />
         </div>

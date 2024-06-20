@@ -20,7 +20,7 @@ const AddProject = () => {
         showToast({ message: err.message, type: "ERROR" });
       } else {
         // Otherwise, it's a JavaScript error
-        showToast({ message: error.message, type: "ERROR" });
+        console.log(error);
       }
     },
   });

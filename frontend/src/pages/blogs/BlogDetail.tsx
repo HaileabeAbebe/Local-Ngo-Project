@@ -49,11 +49,11 @@ const BlogDetail: React.FC = () => {
         <FiUser className="mr-2" />
         createdBy: {blogData.createdBy}
       </div>
-      {blogData.imageURL && (
+      {blogData.imageURLs && (
         <div className="mt-6">
           <img
             className="object-cover w-full h-64 transition-transform duration-500 ease-in-out transform hover:scale-105"
-            src={blogData.imageURL}
+            src={blogData.imageURLs[0]}
             alt={blogData.title}
           />
         </div>

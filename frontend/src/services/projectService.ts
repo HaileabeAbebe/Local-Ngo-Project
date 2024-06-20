@@ -1,5 +1,5 @@
-import { IProject } from "../components/projects/ProjectCard";
 import { handleResponse } from "../utils/apiUtils";
+import { IProject } from "../utils/types";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const fetchProjects = async () => {

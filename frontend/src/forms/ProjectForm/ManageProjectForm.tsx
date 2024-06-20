@@ -17,9 +17,11 @@ const ManageProjectForm = ({ onSave, isLoading, project }: Props) => {
 
   useEffect(() => {
     if (project) {
-      const startDate = new Date(project.startDate).toISOString().split("T")[0];
-      const endDate = new Date(project.endDate).toISOString().split("T")[0];
-      reset({ ...project, startDate, endDate });
+      reset({
+        ...project,
+        startDate: new Date(project.startDate),
+        endDate: new Date(project.endDate),
+      });
     }
   }, [project, reset]);
 
@@ -31,8 +33,8 @@ const ManageProjectForm = ({ onSave, isLoading, project }: Props) => {
     formData.append("title", formDataJson.title);
     formData.append("description", formDataJson.description);
     formData.append("status", formDataJson.status);
-    formData.append("startDate", formDataJson.startDate.toString());
-    formData.append("endDate", formDataJson.endDate.toString());
+    formData.append("startDate", formDataJson.startDate.toISOString());
+    formData.append("endDate", formDataJson.endDate.toISOString());
 
     if (formDataJson.imageUrls) {
       formDataJson.imageUrls.forEach((url, index) => {
