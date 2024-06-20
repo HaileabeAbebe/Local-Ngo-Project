@@ -13,36 +13,36 @@ import Events from "./pages/events/Events";
 import BackgroundHistory from "./pages/AboutUs/BackgroundHistory";
 import MissionVisionValues from "./pages/AboutUs/MissionVisionValues";
 import OrganizationalStructure from "./pages/AboutUs/OrganizationalStructure";
+import Strategies from "./pages/Downloads/Strategies";
 import Announcements from "./pages/Announcements/Announcements";
 import OfficialProfile from "./pages/AboutUs/OfficialProfile";
+import Manuals from "./pages/Downloads/Manuals";
+import AddDownload from "./pages/Downloads/AddDownloads";
 import TermAndConditions from "./pages/TermAndConditions";
 import EditDownload from "./pages/Downloads/EditDownloads";
 import Downloads from "./pages/Downloads/Downloads";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
-import AdminOverview from "./pages/Admin/AdminOverview";
 import ProtectedAdminRoute from "./components/molecules/ProtectedAdminRoute";
 import ProtectedRoute from "./components/molecules/ProtectedRoute";
+import OthersDownload from "./pages/Downloads/OthersDownload";
 import AddEvent from "./pages/events/AddEvent";
 import AddAnnouncement from "./pages/Announcements/AddAnnouncement";
 import EventDetail from "./pages/events/EventDetail";
 import EditEvent from "./pages/events/EditEvent";
 import Users from "./pages/Admin/users/Users";
 import Analytics from "./pages/Admin/analytics";
+import AdminOverview from "./pages/Admin/AdminOverview";
 import AnnouncementDetail from "./pages/Announcements/AnnouncementDetail";
-// import OthersDownload from "./pages/Downloads/OthersDownload";
-// import Manuals from "./pages/Downloads/Manuals";
-// import Strategies from "./pages/Downloads/Strategies";
 // News
 import News from "./pages/news/News";
 import AddNews from "./pages/news/AddNews";
 import EditNews from "./pages/news/EditNews";
 import NewsDetail from "./pages/news/NewsDetail";
 // Project
-// import Projects from "./pages/projects/Projects";
-// import ProjectDetail from "./pages/projects/ProjectDetail";
-// import AddProject from "./pages/projects/AddProject";
-// import EditProject from "./pages/projects/EditProject";
-// import AddDownload from "./pages/Downloads/AddDownloads";
+import Projects from "./pages/projects/Projects";
+import AddProject from "./pages/projects/AddProject";
+import EditProject from "./pages/projects/EditProject";
+import ProjectDetail from "./pages/projects/ProjectDetail";
 // import TeamMembers from "./pages/Admin/TeamMembers";
 // import Settings from "./pages/Admin/Settings";
 
@@ -73,14 +73,14 @@ const App: FC = () => {
             </ProtectedAdminRoute>
           }
         />
-        {/* <Route
+        <Route
           path="projects"
           element={
             <ProtectedAdminRoute>
               <Projects />
             </ProtectedAdminRoute>
           }
-        /> */}
+        />
         <Route
           path="news"
           element={
@@ -157,7 +157,7 @@ const App: FC = () => {
   <Route path="settings" element={<ProtectedAdminRoute><Settings /></ProtectedAdminRoute>} /> */}
       </Route>
 
-      {/* <Route
+      <Route
         path="/projects"
         element={
           <Layout>
@@ -192,7 +192,7 @@ const App: FC = () => {
             </Layout>
           </ProtectedRoute>
         }
-      /> */}
+      />
 
       <Route
         path="/news"
@@ -288,31 +288,31 @@ const App: FC = () => {
           </Layout>
         }
       />
-      {/* <Route
+      <Route
         path="/strategies"
         element={
           <Layout>
             <Strategies />
           </Layout>
         }
-      /> */}
-      {/* <Route
+      />
+      <Route
         path="/manuals"
         element={
           <Layout>
             <Manuals />
           </Layout>
         }
-      /> */}
-      {/* <Route
+      />
+      <Route
         path="/others"
         element={
           <Layout>
             <OthersDownload />
           </Layout>
         }
-      /> */}
-      {/* <Route
+      />
+      <Route
         path="/add-download"
         element={
           <ProtectedRoute>
@@ -321,7 +321,7 @@ const App: FC = () => {
             </Layout>
           </ProtectedRoute>
         }
-      /> */}
+      />
       <Route
         path="/edit-download"
         element={
