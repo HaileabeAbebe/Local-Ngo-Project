@@ -163,6 +163,7 @@ const AdminOverview: React.FC = () => {
             <p className="text-gray-600">{user.email}</p>
             <p className="text-gray-600">{user.role}</p>
             <select
+              title="role"
               value={user.role}
               onChange={(e) => handleRoleChange(user._id, e.target.value)}
               className="mt-2 p-2 border rounded bg-green-800 text-white">

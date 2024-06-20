@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import DownloadList from "../../components/downloads/DownloadList";
 import * as apiCall from "../../services/downloadService";
 import { useAppContext } from "../../contexts/AppContext";
 import { IDownload } from "../../utils/types";
 import SearchAndSort from "../../components/SearchAndSort";
 import { filterDownloads } from "../../utils/downloadUtils";
+import DownloadList from "../../components/downloads/DownloadList";
 
 const Strategies: React.FC = () => {
   const [search, setSearch] = useState("");
